@@ -10,6 +10,8 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 # Create a directory for our executable
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/bin" ${CMAKE_MODULE_PATH})
 
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT video_stabilizer)
+
 #########################################################
 # Force Output Directories
 # In general, this isn't a very friendly thing to do,
@@ -27,6 +29,20 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 
 find_package(OpenCV 4.10 REQUIRED core imgcodecs highgui)
 include_directories(${OpenCV_INCLUDE_DIRS})
+
+#########################################################
+# External Libraries
+#########################################################
+
+include(FetchContent)
+
+FetchContent_Declare(
+        imgui-glfw-glad-glm
+        GIT_REPOSITORY https://github.com/cmmw/imgui-glfw-glad-glm.git
+        GIT_TAG v4.2.0
+)
+
+FetchContent_MakeAvailable(imgui-glfw-glad-glm)
 
 #########################################################
 # Set Compiler Flags
