@@ -399,3 +399,6 @@ FodyWeavers.xsd
 
 # Build directory
 /build
+
+# Config files
+*.ini
