@@ -1,16 +1,16 @@
 cmake_minimum_required(VERSION 3.30)
-project(video_stabilizer VERSION 0.0.1)
 
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 23)
+
+# Project
+project(video_stabilizer VERSION 0.0.1)
 
 # Enable IDE Project Folders
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 # Create a directory for our executable
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/bin" ${CMAKE_MODULE_PATH})
-
-set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT video_stabilizer)
 
 #########################################################
 # Force Output Directories
@@ -100,3 +100,6 @@ include_directories("${PROJECT_SOURCE_DIR}/include")
 
 add_subdirectory(app)
 add_subdirectory(src)
+add_subdirectory(shaders)
+
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT app)
