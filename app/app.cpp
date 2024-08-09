@@ -66,7 +66,7 @@ auto main() -> int {
 
   //------------------------------------------------------------ Main Loop --//
 
-  glClearColor(0.5, 0.5, 0.5, 1);
+  glClearColor(0.0, 0.0, 0.0, 1);
 
   while (!glfwWindowShouldClose(window)) {
     glfwPollEvents();
