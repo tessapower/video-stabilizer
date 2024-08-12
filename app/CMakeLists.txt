@@ -1,3 +1,17 @@
-add_executable(app app.cpp)
+# Image Source files
+file(GLOB APP_SOURCES *.c *.cpp)
 
-target_link_libraries(app PRIVATE video_stabilizer)
+list(APPEND
+    APP_SOURCES
+    "CMakeLists.txt"
+)
+
+set(APP_HEADERS
+    "${PROJECT_SOURCE_DIR}/include/app/app.h"
+    "${PROJECT_SOURCE_DIR}/include/utils.h"
+)
+
+add_executable(app ${APP_SOURCES} ${APP_HEADERS})
+
+target_link_libraries(app PRIVATE imgui glm)
+target_link_libraries(app PRIVATE vid_lib)
