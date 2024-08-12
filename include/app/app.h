@@ -11,6 +11,10 @@
 #include "GLFW/glfw3.h"
 
 namespace app {
+
+static constexpr int window_width = 500;
+static constexpr int window_height = 500;
+
 /**
  * @brief Returns a string representing the error source.
  */
