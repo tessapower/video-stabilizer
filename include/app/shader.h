@@ -62,6 +62,7 @@ class shader_builder {
       set_shader_source(type, buffer.str());
     } catch (shader_compile_error &e) {
       std::cerr << "Error: Could not compile " << file_name << '\n';
+      std::cerr << "Shader Error: " << e.what() << "\n";
       throw;
     }
   }
