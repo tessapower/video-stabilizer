@@ -25,5 +25,9 @@ set_property(TARGET app PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "${PROJECT_SOURCE
 # Link Libraries
 #########################################################
 
-target_link_libraries(app PRIVATE imgui glm)
+target_link_libraries(app PRIVATE imgui::imgui)
+target_link_libraries(app PRIVATE glad::glad)
+target_link_libraries(app PRIVATE glfw)
+target_link_libraries(app PRIVATE glm::glm)
+target_link_libraries(app PRIVATE nfd::nfd)
 target_link_libraries(app PRIVATE vid_lib)

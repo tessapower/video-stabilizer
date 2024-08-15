@@ -27,13 +27,16 @@
 ///   TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 ///   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ///
+/// USAGE: How to compile/run this file, e.g., "Compile with: g++ main.cpp -o
+/// myApp"
+///
 /// NOTES: This project expects that OpenCV is installed locally on your system
 ///
 
 #include "app/app.h"
 
 #include <GLFW/glfw3.h>
-#include <glad/gl.h>
+#include <glad/glad.h>
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
@@ -70,7 +73,8 @@ auto main() -> int {
   glfwMakeContextCurrent(window);
 
   //----------------------------------------------- Initialize GLAD system --//
-  if (!gladLoaderLoadGL()) throw std::runtime_error("Error initializing glad");
+  if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
+    throw std::runtime_error("Error initializing glad");
 
   // Enable debugging OpenGL and pass it a callback function to use
   glEnable(GL_DEBUG_OUTPUT);
@@ -82,7 +86,7 @@ auto main() -> int {
 
   // TODO: Add logging support
   std::cout << "Using OpenGL " << glGetString(GL_VERSION) << '\n';
-  std::cout << "Using GLAD " << GLAD_GENERATOR_VERSION << '\n';
+  std::cout << "Using GLAD " << GLVersion.major << "." << GLVersion.minor << '\n';
   std::cout << "Using GLFW " << glfw_major << "." << glfw_minor << "."
             << glfw_revision << '\n';
   std::cout << "Using ImGui " << IMGUI_VERSION << "\n";

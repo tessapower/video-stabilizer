@@ -3,6 +3,9 @@ cmake_minimum_required(VERSION 3.30)
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 23)
 
+# Set CMake Toolchain to use vcpkg
+set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}//scripts//buildsystems//vcpkg.cmake")
+
 # Project
 project(video_stabilizer VERSION 0.0.1)
 
@@ -24,25 +27,18 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 
 #########################################################
-# Find OpenCV
-#########################################################
-
-find_package(OpenCV 4.10 REQUIRED core imgcodecs highgui)
-include_directories(${OpenCV_INCLUDE_DIRS})
-
-#########################################################
 # External Libraries
 #########################################################
 
-include(FetchContent)
+set(OpenCV_DIR "${VCPKG_INSTALLED_DIR}/x64-windows/share/opencv4")
+find_package(OpenCV REQUIRED)
+include_directories(${OpenCV_INCLUDE_DIRS})
 
-FetchContent_Declare(
-        imgui-glfw-glad-glm
-        GIT_REPOSITORY https://github.com/cmmw/imgui-glfw-glad-glm.git
-        GIT_TAG v4.2.0
-)
-
-FetchContent_MakeAvailable(imgui-glfw-glad-glm)
+find_package(glad CONFIG REQUIRED)
+find_package(glfw3 CONFIG REQUIRED)
+find_package(glm CONFIG REQUIRED)
+find_package(imgui CONFIG REQUIRED)
+find_package(nfd CONFIG REQUIRED)
 
 #########################################################
 # Set Compiler Flags
@@ -92,7 +88,10 @@ endif()
 # Include directory for header files
 #########################################################
 
-include_directories("${PROJECT_SOURCE_DIR}/include")
+include_directories(
+    "${VCPKG_INSTALLED_DIR}/${MATCHED_TRIPLET}/include"
+    "${PROJECT_SOURCE_DIR}/include"
+    )
 
 #########################################################
 # Source Files

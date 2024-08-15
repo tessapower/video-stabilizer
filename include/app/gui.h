@@ -1,7 +1,7 @@
 #ifndef GUI_H
 #define GUI_H
 
-#include <glad/gl.h>
+#include <glad/glad.h>
 
 #include <iostream>
 
