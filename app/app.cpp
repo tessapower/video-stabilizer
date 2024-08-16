@@ -68,6 +68,7 @@ auto main() -> int {
 
   glClearColor(0.0, 0.0, 0.0, 1);
 
+  // TODO: create a close callback to handle cleanup
   while (!glfwWindowShouldClose(window)) {
     glfwPollEvents();
 
