@@ -37,6 +37,10 @@ auto main() -> int {
   //------------------------------------------------------ Initialize Glad --//
   if (!gladLoaderLoadGL()) throw std::runtime_error("Error initializing glad");
 
+  glEnable(GL_CULL_FACE);
+  glEnable(GL_DEBUG_OUTPUT);
+  glDebugMessageCallback(app::debug_cb, nullptr);
+
   //----------------------------------------------------------------- Logs --//
   int glfw_major, glfw_minor, glfw_revision;
   glfwGetVersion(&glfw_major, &glfw_minor, &glfw_revision);
@@ -50,16 +54,12 @@ auto main() -> int {
   //----------------------------------------------------- Initialize ImGui --//
   app::init_imgui(window);
 
-  glEnable(GL_CULL_FACE);
-  glEnable(GL_DEBUG_OUTPUT);
-  glDebugMessageCallback(app::debug_cb, nullptr);
-
   //------------------------------------------------------ Compile Shaders --//
   app::shader_builder shader_builder;
-  shader_builder.set_shader(
-      GL_VERTEX_SHADER, std::string("//shaders//vertex.glsl"));
-  shader_builder.set_shader(
-      GL_FRAGMENT_SHADER, std::string("//shaders//fragment.glsl"));
+  shader_builder.set_shader(GL_VERTEX_SHADER,
+                            std::string("//shaders//vertex.glsl"));
+  shader_builder.set_shader(GL_FRAGMENT_SHADER,
+                            std::string("//shaders//fragment.glsl"));
   const GLuint shader = shader_builder.build();
   glUseProgram(shader);
 
