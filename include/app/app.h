@@ -99,7 +99,9 @@ inline auto init_imgui(GLFWwindow *window) -> bool {
   ImGui::CreateContext();
   ImGui_ImplGlfw_InitForOpenGL(window, true);
   ImGui_ImplOpenGL3_Init("#version 460 core");
-  ImGui::StyleColorsClassic();
+
+  // Set flags and styles
+  ImGui::StyleColorsDark();
 
   return true;
 }

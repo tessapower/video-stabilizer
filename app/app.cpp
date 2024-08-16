@@ -21,6 +21,9 @@ auto main() -> int {
   }
 
   //-------------------------------------------------------- Create window --//
+  // Do not support resizing the window
+  glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+
   const auto window =
       glfwCreateWindow(500, 500, "Video Stabilizer", nullptr, nullptr);
   if (!window) {
@@ -28,6 +31,7 @@ auto main() -> int {
     abort();
   }
 
+  glfwSetWindowPos(window, 100, 100);
   glfwMakeContextCurrent(window);
 
   //------------------------------------------------------ Initialize Glad --//
@@ -70,11 +74,74 @@ auto main() -> int {
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 
-    static bool show_demo = false;
-    ImGui::Begin("Example");
-    if (ImGui::Button("Show/Hide ImGui demo")) show_demo = !show_demo;
+    // TODO: move below code into dedicated render() function
+
+    //---------------------------------------------------- Start Rendering --//
+    // Set up the window flags
+    ImGuiWindowFlags window_flags = 0;
+    window_flags |= ImGuiWindowFlags_MenuBar;
+    window_flags |= ImGuiWindowFlags_NoCollapse;
+    window_flags |= ImGuiWindowFlags_NoDecoration;
+    window_flags |= ImGuiWindowFlags_NoMove;
+    window_flags |= ImGuiWindowFlags_NoSavedSettings;
+    window_flags |= ImGuiWindowFlags_NoScrollbar;
+    window_flags |= ImGuiWindowFlags_NoTitleBar;
+
+    // Set up the window to take up the entire screen
+    const ImGuiViewport* viewport = ImGui::GetMainViewport();
+    ImGui::SetNextWindowPos(viewport->WorkPos);
+    ImGui::SetNextWindowSize(viewport->WorkSize);
+
+    //----------------------------------------------------------- Menu Bar --//
+    ImGui::Begin("Example", nullptr, window_flags);
+    {
+      // Remember that we use if-statements here because we
+      // should only call EndMenu(Bar) if BeginMenu(Bar) returns true
+      if (ImGui::BeginMenuBar()) {
+        if (ImGui::BeginMenu("File")) {
+          if (ImGui::MenuItem("Open", "Ctrl+O")) {
+            std::cout << "Open file selection dialog\n";
+          }
+          if (ImGui::MenuItem("Save", "Ctrl+S")) {
+            std::cout << "Save current video project\n";
+          }
+          if (ImGui::MenuItem("Close", "Ctrl+W")) {
+            std::cout << "Exiting...\n";
+            break;
+          }
+          ImGui::EndMenu();
+        }
+        if (ImGui::BeginMenu("Help")) {
+          if (ImGui::MenuItem("View Help", "Ctrl+H")) {
+            std::cout << "Open help dialog\n";
+            std::cout << "Description of how to use program...\n\n";
+          }
+          if (ImGui::MenuItem("About", "Ctrl+A")) {
+            std::cout << "Open about dialog\n";
+            std::cout << "Display version number\n\n";
+            std::cout << "Link to GitHub repo...\n\n";
+          }
+          if (ImGui::MenuItem("Release Notes", "Ctrl+N")) {
+            std::cout << "Dialog with Latest release notes...\n\n";
+          }
+          if (ImGui::MenuItem("Report an Issue", "Ctrl+R")) {
+            std::cout << "Link to Bug Report template...\n\n";
+          }
+          if (ImGui::MenuItem("License", "Ctrl+L")) {
+            std::cout << "Open license dialog\n\n";
+          }
+          ImGui::EndMenu();
+        }
+        ImGui::EndMenuBar();
+      }
+
+      //--------------------------------------------------- Window Content --//
+      ImGui::Text("Video Stabilizer");
+
+    }
     ImGui::End();
-    if (show_demo) ImGui::ShowDemoWindow(&show_demo);
+
+    //------------------------------------------------------ End Rendering --//
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -89,7 +156,6 @@ auto main() -> int {
   // TODO: detect(?) and set frame rate
   // TODO: play the original and stabilized video for side-by-side comparison
   // TODO: save video to disk
-
 
   app::shutdown(window);
 
