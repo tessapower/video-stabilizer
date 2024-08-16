@@ -9,6 +9,7 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+#include "utils.h"
 
 namespace gui {
 inline static constexpr auto window_flags =
@@ -22,10 +23,15 @@ inline static constexpr auto popup_flags = ImGuiWindowFlags_NoResize |
 
 inline static constexpr auto popup_size = ImVec2(250.0f, 0.0f);
 
-inline auto centered_button(std::string const& text)
-    -> bool {
+/**
+ * Creates an ImGui button that is centered horizontally in the window.
+ * @param text The button text.
+ * @return True if the button was activated (i.e. clicked), otherwise false.
+ */
+inline auto centered_button(std::string const& text) -> bool {
   const auto width = ImGui::CalcTextSize(text.c_str()).x + 20.0f;
   ImGui::SetCursorPosX((ImGui::GetWindowWidth() - width) / 2.0f);
+
   return ImGui::Button(text.c_str(), ImVec2(width, 0.0f));
 }
 
@@ -46,16 +52,22 @@ inline auto render(GLFWwindow* window) -> void {
     // should only call EndMenu(Bar) if BeginMenu(Bar) returns true
     if (ImGui::BeginMenuBar()) {
       if (ImGui::BeginMenu("File")) {
-        if (ImGui::MenuItem("Open", "Ctrl+O")) {
-          std::cout << "Open file selection dialog\n";
+        if (ImGui::MenuItem("Import Video")) {
+          std::string path;
+          if (utils::get_video_path(window, path)) {
+            std::cout << "Opening file: " << path << '\n';
+          }
         }
+
         if (ImGui::MenuItem("Save", "Ctrl+S")) {
           std::cout << "Save current video project\n";
         }
+
         if (ImGui::MenuItem("Close", "Ctrl+W")) {
           std::cout << "Exiting...\n";
           glfwSetWindowShouldClose(window, GLFW_TRUE);
         }
+
         ImGui::EndMenu();
       }
       ImGui::EndMenuBar();

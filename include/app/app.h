@@ -6,6 +6,7 @@
 #include <glad/glad.h>
 
 #include <iostream>
+#include <nfd.h>
 
 #include "imgui.h"
 #include "imgui_internal.h"
@@ -140,6 +141,8 @@ inline auto shutdown(GLFWwindow * window) -> void {
   ImGui_ImplOpenGL3_Shutdown();
   ImGui_ImplGlfw_Shutdown();
   ImGui::DestroyContext();
+
+  NFD_Quit();
 
   glfwDestroyWindow(window);
   glfwTerminate();
