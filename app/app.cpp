@@ -43,17 +43,16 @@
 
 #include "app/shader.h"
 
-// TODO: Create error codes
-
 auto main() -> int {
-  //------------------------------------------------------ Initialize GLFW --//
+  //----------------------------------------------- Initialize GLFW system --//
+  // TODO: Create error codes to handle initialization errors
   if (!app::init_glfw()) {
     std::cerr << "Error: Could not initialize GLFW" << '\n';
     abort();
   }
 
-  //-------------------------------------------------------- Create window --//
-  // Do not support resizing the window
+  //--------------------------------------------------- Create GLFW window --//
+  // Do not support resizing the window to keep things simple
   glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
   const auto window = glfwCreateWindow(app::window_width, app::window_height,
@@ -64,17 +63,19 @@ auto main() -> int {
     abort();
   }
 
+  // TODO: set up the window to open centered on the screen
   glfwSetWindowPos(window, 100, 100);
+  // Make our new window the current context for OpenGL
   glfwMakeContextCurrent(window);
 
-  //------------------------------------------------------ Initialize Glad --//
+  //----------------------------------------------- Initialize GLAD system --//
   if (!gladLoaderLoadGL()) throw std::runtime_error("Error initializing glad");
 
-  glEnable(GL_CULL_FACE);
+  // Enable debugging OpenGL and pass it a callback function to use
   glEnable(GL_DEBUG_OUTPUT);
   glDebugMessageCallback(app::debug_cb, nullptr);
 
-  //----------------------------------------------------------------- Logs --//
+  //------------------------------------ Log dependency versions to stdout --//
   int glfw_major, glfw_minor, glfw_revision;
   glfwGetVersion(&glfw_major, &glfw_minor, &glfw_revision);
 
@@ -86,9 +87,12 @@ auto main() -> int {
   std::cout << "Using ImGui " << IMGUI_VERSION << "\n";
 
   //----------------------------------------------------- Initialize ImGui --//
+  // This handles all the verbose setup code for our ImGui window
   app::init_imgui(window);
 
   //------------------------------------------------------ Compile Shaders --//
+  // Because we are using OpenGL, we need some default shaders, so we pass in
+  // the bare minimum to the shader builder.
   app::shader_builder shader_builder;
   shader_builder.set_shader(GL_VERTEX_SHADER,
                             std::string("//shaders//vertex.glsl"));
@@ -99,9 +103,10 @@ auto main() -> int {
 
   //------------------------------------------------------------ Main Loop --//
 
+  // Clear the background at least once before rendering the GUI
   glClearColor(0.0, 0.0, 0.0, 1);
 
-  // TODO: create a close callback to handle cleanup
+  // TODO: create a close callback to handle cleaning up
   while (!glfwWindowShouldClose(window)) {
     glfwPollEvents();
 
@@ -181,6 +186,7 @@ auto main() -> int {
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
+    // Swap the front and back buffers
     glfwSwapBuffers(window);
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -192,6 +198,7 @@ auto main() -> int {
   // TODO: play the original and stabilized video for side-by-side comparison
   // TODO: save video to disk
 
+  // Happy path: clean up and exit
   app::shutdown(window);
 
   return EXIT_SUCCESS;
