@@ -9,11 +9,11 @@
   #define GLFW_EXPOSE_NATIVE_COCOA
 #endif
 
+#include <iostream>
 #include <nfd.h>
 #include <nfd_glfw3.h>
 #include <GLFW/glfw3.h>
-
-#include <iostream>
+#include <vector>
 
 namespace utils {
 inline auto get_video_path(GLFWwindow* window, std::string& path) -> bool {
