@@ -2,6 +2,7 @@
 #define GUI_H
 
 #include <glad/glad.h>
+
 #include <iostream>
 #include <vector>
 
@@ -18,7 +19,8 @@ inline static constexpr auto window_flags =
     ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoTitleBar;
 
 inline static constexpr auto popup_flags = ImGuiWindowFlags_NoResize |
-    ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar;
+                                           ImGuiWindowFlags_NoMove |
+                                           ImGuiWindowFlags_NoTitleBar;
 
 inline static constexpr auto popup_size = ImVec2(400.0f, 300.0f);
 
@@ -34,6 +36,10 @@ inline auto centered_button(std::string const& text) -> bool {
   return ImGui::Button(text.c_str(), ImVec2(width, 0.0f));
 }
 
+/**
+ * Renders the graphical user interface in the given window. Forwards user
+ * actions to the appropriate functions.
+ */
 inline auto render(GLFWwindow* window) -> void {
   ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplGlfw_NewFrame();
@@ -80,6 +86,10 @@ inline auto render(GLFWwindow* window) -> void {
       std::cout << "Save current video project...\n";
     }
     ImGui::EndDisabled();
+
+    // TODO: Add stats like the file name, frame rate, resolution, etc. 
+
+    ImGui::Spacing();
 
     //------------------------------------------------------ Logger window --//
 
@@ -141,22 +151,22 @@ inline auto render(GLFWwindow* window) -> void {
       ImGui::EndPopup();
     }
 
-    if (ImGui::BeginPopupModal("help_popup", nullptr, popup_flags)) {
-      ImGui::TextWrapped(
-          "This will contain helpful instructions for using the program. "
-          "This will contain helpful instructions for using the program. "
-          "This will contain helpful instructions for using the program. "
-          "This will contain helpful instructions for using the program. "
-          "This will contain helpful instructions for using the program. "
-          "This will contain helpful instructions for using the program. "
-          "This will contain helpful instructions for using the program. "
-          "This will contain helpful instructions for using the program. ");
-      ImGui::Spacing();
+    // if (ImGui::BeginPopupModal("help_popup", nullptr, popup_flags)) {
+    //   ImGui::TextWrapped(
+    //       "This will contain helpful instructions for using the program. "
+    //       "This will contain helpful instructions for using the program. "
+    //       "This will contain helpful instructions for using the program. "
+    //       "This will contain helpful instructions for using the program. "
+    //       "This will contain helpful instructions for using the program. "
+    //       "This will contain helpful instructions for using the program. "
+    //       "This will contain helpful instructions for using the program. "
+    //       "This will contain helpful instructions for using the program. ");
+    //   ImGui::Spacing();
 
-      if (centered_button("Close")) ImGui::CloseCurrentPopup();
+    //  if (centered_button("Close")) ImGui::CloseCurrentPopup();
 
-      ImGui::EndPopup();
-    }
+    //  ImGui::EndPopup();
+    //}
   }
 
   ImGui::End();
