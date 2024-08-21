@@ -13,10 +13,9 @@
 
 namespace gui {
 inline static constexpr auto window_flags =
-    ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse |
-    ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove |
-    ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoScrollbar |
-    ImGuiWindowFlags_NoTitleBar;
+    ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration |
+    ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings |
+    ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoTitleBar;
 
 inline static constexpr auto popup_flags = ImGuiWindowFlags_NoResize |
     ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar;
@@ -47,43 +46,43 @@ inline auto render(GLFWwindow* window) -> void {
 
   ImGui::Begin("App", nullptr, window_flags);
   {
-    //----------------------------------------------------------- Menu Bar --//
-    // Remember that we use if-statements here because we
-    // should only call EndMenu(Bar) if BeginMenu(Bar) returns true
-    if (ImGui::BeginMenuBar()) {
-      if (ImGui::BeginMenu("File")) {
-        if (ImGui::MenuItem("Import Video")) {
-          std::string path;
-          if (utils::get_video_path(window, path)) {
-            std::cout << "Opening file: " << path << '\n';
-          }
-        }
-
-        if (ImGui::MenuItem("Import Frames")) {
-          std::vector<std::string> paths;
-          if (utils::get_frame_paths(window, paths)) {
-            for (const auto& path : paths) {
-              std::cout << "Opening file: " << path << '\n';
-            }
-          }
-        }
-
-        if (ImGui::MenuItem("Save")) {
-          std::cout << "Save current video project\n";
-        }
-
-        if (ImGui::MenuItem("Close")) {
-          std::cout << "Exiting...\n";
-          glfwSetWindowShouldClose(window, GLFW_TRUE);
-        }
-
-        ImGui::EndMenu();
-      }
-      ImGui::EndMenuBar();
-    }
-
     //--------------------------------------------------- Window Content --//
-    ImGui::TextWrapped("This is a short description of the program and what it does.\n\n");
+    ImGui::TextWrapped(
+        "This is a short description of the program and what it does.\n\n");
+
+    //----------------------------------------------------- Action Buttons --//
+    if (ImGui::Button("Import Video")) {
+      std::string path;
+      if (utils::get_video_path(window, path)) {
+        std::cout << "Opening file: " << path << '\n';
+      }
+    }
+    ImGui::SameLine();
+
+    if (ImGui::Button("Import Frames")) {
+      std::vector<std::string> paths;
+      if (utils::get_frame_paths(window, paths)) {
+        for (const auto& path : paths) {
+          std::cout << "Opening file: " << path << '\n';
+        }
+      }
+    }
+    ImGui::SameLine();
+
+    ImGui::BeginDisabled(true);
+    if (ImGui::Button("Stabilize")) {
+      std::cout << "Stabilize and crop the video...\n";
+    }
+    ImGui::EndDisabled();
+
+    ImGui::BeginDisabled(true);
+    if (ImGui::Button("Save")) {
+      std::cout << "Save current video project...\n";
+    }
+    ImGui::EndDisabled();
+
+    //------------------------------------------------------ Logger window --//
+
     if (ImGui::Button("Help")) {
       // ImGui::OpenPopup("help_popup");
       // TODO: decide whether we like the help popup or help log better
