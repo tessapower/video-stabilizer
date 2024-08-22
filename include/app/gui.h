@@ -103,11 +103,10 @@ inline auto render(GLFWwindow* window) -> void {
     ImGui::Spacing();
 
     //------------------------------------------------------------- Footer --//
-    if (ImGui::Button("License")) ImGui::OpenPopup("license_popup");
+    if (ImGui::TextLink("License")) ImGui::OpenPopup("license_popup");
 
     ImGui::TextLinkOpenURL("View this project on GitHub",
                            "https://github.com/tessapower/video-stabilizer");
-    // ImGui::SameLine();
     ImGui::TextLinkOpenURL(
         "Report an issue",
         "https://github.com/tessapower/video-stabilizer/issues/new");
