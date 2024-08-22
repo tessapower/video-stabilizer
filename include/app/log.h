@@ -40,7 +40,11 @@ struct log {
     // Buttons
     if (ImGui::Button("Options")) ImGui::OpenPopup("Options");
     ImGui::SameLine();
+
+    // Create a disabled button if the buffer is empty
+    ImGui::BeginDisabled(buf.empty());
     const bool clear = ImGui::Button("Clear");
+    ImGui::EndDisabled();
 
     ImGui::Separator();
 
