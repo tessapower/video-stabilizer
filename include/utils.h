@@ -2,23 +2,34 @@
 #define UTILS_H
 
 #if defined(_WIN32)
-  #define GLFW_EXPOSE_NATIVE_WIN32
+#define GLFW_EXPOSE_NATIVE_WIN32
 #elif defined(__linux__)
-  #define GLFW_EXPOSE_NATIVE_X11
+#define GLFW_EXPOSE_NATIVE_X11
 #elif defined(__APPLE__)
-  #define GLFW_EXPOSE_NATIVE_COCOA
+#define GLFW_EXPOSE_NATIVE_COCOA
 #endif
 
-#include <iostream>
+#include <GLFW/glfw3.h>
 #include <nfd.h>
 #include <nfd_glfw3.h>
-#include <GLFW/glfw3.h>
+
+#include <iostream>
 #include <vector>
 
 namespace utils {
+/**
+ * @brief Opens a native file dialog so the user can select a video file. Only
+ * files with the following extensions can be selected: *.mov, *.mp4, *.mpeg4,
+ * *.wmv, *.avi, and *.flv.
+ *
+ * @param window The parent window of the file picker.
+ * @param path A string to store the selected file path.
+ * @return Whether the user successfully selected a file.
+ */
 inline auto get_video_path(GLFWwindow* window, std::string& path) -> bool {
   nfdchar_t* out_path = nullptr;
-  constexpr nfdu8filteritem_t filters[1] = {{"video", "mov,mp4,mpeg4,wmv,avi,flv"}};
+  constexpr nfdu8filteritem_t filters[1] = {
+      {"video", "mov,mp4,mpeg4,wmv,avi,flv"}};
   nfdopendialogu8args_t args = {nullptr, 0, nullptr};
   NFD_GetNativeWindowFromGLFWWindow(window, &args.parentWindow);
   args.filterList = filters;
@@ -45,10 +56,19 @@ inline auto get_video_path(GLFWwindow* window, std::string& path) -> bool {
   return false;
 }
 
-inline auto get_frame_paths(GLFWwindow* window, std::vector<std::string>& paths) -> bool {
+/**
+ * @brief Opens a native file dialog so the user can select multiple files
+ * corresponding to the frames of a video. Only files with the following
+ * extensions can be selected: *.jpg, *.jpeg, and *.png.
+ *
+ * @param window The parent window of the file picker.
+ * @param paths A vector of strings to store the selected file paths.
+ * @return Whether the user successfully selected files.
+ */
+inline auto get_frame_paths(GLFWwindow* window, std::vector<std::string>& paths)
+    -> bool {
   const nfdpathset_t* out_paths;
-  constexpr nfdu8filteritem_t filters[1] = {
-      {"images", "jpg,jpeg,png"}};
+  constexpr nfdu8filteritem_t filters[1] = {{"images", "jpg,jpeg,png"}};
   nfdopendialogu8args_t args = {nullptr, 0, nullptr};
   NFD_GetNativeWindowFromGLFWWindow(window, &args.parentWindow);
   args.filterList = filters;
