@@ -402,3 +402,6 @@ FodyWeavers.xsd
 
 # Config files
 *.ini
+
+# VCPKG install directory
+/vcpkg_installed
