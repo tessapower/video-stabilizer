@@ -95,6 +95,9 @@ auto main() -> int {
   // This handles all the verbose setup code for our ImGui window
   app::init_imgui(window);
 
+  //---------------------------------------- Initialize Native File Dialog --//
+  NFD_Init();
+
   //------------------------------------------------------ Compile Shaders --//
   // Because we are using OpenGL, we need some default shaders, so we pass in
   // the bare minimum to the shader builder.
