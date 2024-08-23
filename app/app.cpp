@@ -109,7 +109,7 @@ auto main() -> int {
   //------------------------------------------------------------ Main Loop --//
 
   // Clear the background at least once before rendering the GUI
-  glClearColor(0.0, 0.0, 0.0, 1);
+  glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
   // TODO: create a close callback to handle cleaning up
   while (!glfwWindowShouldClose(window)) {
