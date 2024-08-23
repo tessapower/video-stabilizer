@@ -59,11 +59,20 @@ inline auto render(GLFWwindow* window) -> void {
           }
         }
 
-        if (ImGui::MenuItem("Save", "Ctrl+S")) {
+        if (ImGui::MenuItem("Import Frames")) {
+          std::vector<std::string> paths;
+          if (utils::get_frame_paths(window, paths)) {
+            for (const auto& path : paths) {
+              std::cout << "Opening file: " << path << '\n';
+            }
+          }
+        }
+
+        if (ImGui::MenuItem("Save")) {
           std::cout << "Save current video project\n";
         }
 
-        if (ImGui::MenuItem("Close", "Ctrl+W")) {
+        if (ImGui::MenuItem("Close")) {
           std::cout << "Exiting...\n";
           glfwSetWindowShouldClose(window, GLFW_TRUE);
         }
