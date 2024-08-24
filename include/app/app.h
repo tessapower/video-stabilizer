@@ -11,11 +11,13 @@
 #include "imgui.h"
 #include "imgui_internal.h"
 #include "GLFW/glfw3.h"
+#include "log.h"
 
 namespace app {
 
 static constexpr int window_width = 500;
 static constexpr int window_height = 500;
+static gui::log logger;
 
 /**
  * @brief Returns a string representing the error source.
