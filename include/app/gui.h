@@ -83,36 +83,31 @@ inline auto render(GLFWwindow* window) -> void {
     }
 
     //--------------------------------------------------- Window Content --//
-    ImGui::Text("Video Stabilizer");
-
-    // TODO: Add output console here so user can see what's happening
-
-    for (auto i = 0; i < 100; ++i) ImGui::Spacing();
-
-    //---------------------------------------------------------- Buttons --//
-    if (ImGui::Button("About")) ImGui::OpenPopup("about_popup");
+    ImGui::TextWrapped("This is a short description of the program and what it does.\n\n");
+    if (ImGui::Button("Help")) {
+      // ImGui::OpenPopup("help_popup");
+      // TODO: decide whether we like the help popup or help log better
+      app::logger.add_log("This will display the help menu.\n");
+    }
     ImGui::SameLine();
+    app::logger.draw();
+    ImGui::Spacing();
+
+    //------------------------------------------------------------- Footer --//
     if (ImGui::Button("License")) ImGui::OpenPopup("license_popup");
-    ImGui::SameLine();
-    if (ImGui::Button("Help")) ImGui::OpenPopup("help_popup");
-    ImGui::SameLine();
-    if (ImGui::Button("Release Notes")) ImGui::OpenPopup("release_notes_popup");
+
+    ImGui::TextLinkOpenURL("View this project on GitHub",
+                           "https://github.com/tessapower/video-stabilizer");
+    // ImGui::SameLine();
+    ImGui::TextLinkOpenURL(
+        "Report an issue",
+        "https://github.com/tessapower/video-stabilizer/issues/new");
 
     //------------------------------------------------------- Modal Popups --//
     // Always center this window when appearing
     const ImVec2 center = ImGui::GetMainViewport()->GetCenter();
     ImGui::SetNextWindowSize(popup_size);
     ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
-
-    if (ImGui::BeginPopupModal("about_popup", nullptr, popup_flags)) {
-      ImGui::TextWrapped(
-          "This is a description of the program and what it does.");
-      ImGui::Spacing();
-
-      if (centered_button("Close")) ImGui::CloseCurrentPopup();
-
-      ImGui::EndPopup();
-    }
 
     if (ImGui::BeginPopupModal("license_popup", nullptr, popup_flags)) {
       ImGui::TextWrapped(
@@ -121,26 +116,25 @@ inline auto render(GLFWwindow* window) -> void {
 
           "Permission is hereby granted, free of charge, to any person "
           "obtaining a copy of this software and associated documentation "
-          "files (the \"Software \"), to deal in the Software without "
+          "files (the \"Software\"), to deal in the Software without "
           "restriction, including without limitation the rights to use, "
           "copy, modify, merge, publish, distribute, sublicense, and/or "
           "sell copies of the Software, and to permit persons to whom "
-          "the Software is furnished to do so, subject to the"
+          "the Software is furnished to do so, subject to the "
           "following conditions:\n\n"
 
-          "The above copyright notice and this permission notice shall be"
+          "The above copyright notice and this permission notice shall be "
           "included in all copies or substantial portions of the "
           "Software.\n\n"
 
           "THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, "
           "EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES "
-          "OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND"
-          " NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT "
+          "OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND "
+          "NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT "
           "HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, "
           "WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING "
           "FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE "
-          "OR OTHER DEALINGS IN THE SOFTWARE.");
-
+          "OR OTHER DEALINGS IN THE SOFTWARE.\n\n");
       ImGui::Spacing();
 
       if (centered_button("Close")) ImGui::CloseCurrentPopup();
@@ -164,23 +158,6 @@ inline auto render(GLFWwindow* window) -> void {
 
       ImGui::EndPopup();
     }
-
-    if (ImGui::BeginPopupModal("release_notes_popup", nullptr, popup_flags)) {
-      ImGui::TextWrapped("This will contain the latest release notes.");
-      ImGui::Spacing();
-
-      if (ImGui::Button("Close")) ImGui::CloseCurrentPopup();
-
-      ImGui::EndPopup();
-    }
-
-    //------------------------------------- Repo and Issue Tracker Links --//
-    ImGui::TextLinkOpenURL("View this project on GitHub",
-                           "https://github.com/tessapower/video-stabilizer");
-
-    ImGui::TextLinkOpenURL(
-        "Report an issue",
-        "https://github.com/tessapower/video-stabilizer/issues/new");
   }
 
   ImGui::End();
