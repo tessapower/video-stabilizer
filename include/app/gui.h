@@ -21,7 +21,7 @@ inline static constexpr auto window_flags =
 inline static constexpr auto popup_flags = ImGuiWindowFlags_NoResize |
     ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar;
 
-inline static constexpr auto popup_size = ImVec2(250.0f, 0.0f);
+inline static constexpr auto popup_size = ImVec2(400.0f, 300.0f);
 
 /**
  * Creates an ImGui button that is centered horizontally in the window.
