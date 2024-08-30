@@ -19,11 +19,11 @@
     },
     {
       "name": "imgui",
-      "version>=": "1.91.0",
       "features": [
-        "opengl3-binding",
-        "glfw-binding"
-      ]
+        "glfw-binding",
+        "opengl3-binding"
+      ],
+      "version>=": "1.91.0"
     },
     {
       "name": "nativefiledialog-extended",
@@ -31,7 +31,12 @@
     },
     {
       "name": "opencv4",
+      "features": [ "ffmpeg" ],
       "version>=": "4.8.0#22"
+    },
+    {
+      "name": "stb",
+      "version>=": "2023-04-11#1"
     }
   ]
 }

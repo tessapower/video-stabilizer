@@ -34,6 +34,7 @@ set(OpenCV_DIR "${VCPKG_INSTALLED_DIR}/x64-windows/share/opencv4")
 find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
 
+find_package(Stb REQUIRED)
 find_package(glad CONFIG REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
@@ -91,6 +92,7 @@ endif()
 include_directories(
     "${VCPKG_INSTALLED_DIR}/${MATCHED_TRIPLET}/include"
     "${PROJECT_SOURCE_DIR}/include"
+    "${Stb_INCLUDE_DIR}"
     )
 
 #########################################################
