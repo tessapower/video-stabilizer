@@ -1,14 +1,15 @@
 #ifndef APP_H
 #define APP_H
 
+#include <GLFW/glfw3.h>
 #include <glad/glad.h>
-#include <iostream>
-#include <nfd.h>
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 #include <imgui_internal.h>
-#include <GLFW/glfw3.h>
+#include <nfd.h>
+
+#include <iostream>
 
 #include "log.h"
 #include "video/vid.h"
@@ -139,7 +140,7 @@ inline auto init_glfw() -> bool {
 /**
  * @brief Shuts down all appropriate systems.
  */
-inline auto shutdown(GLFWwindow * window) -> void {
+inline auto shutdown(GLFWwindow *window) -> void {
   ImGui_ImplOpenGL3_Shutdown();
   ImGui_ImplGlfw_Shutdown();
   ImGui::DestroyContext();

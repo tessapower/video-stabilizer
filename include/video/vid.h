@@ -3,6 +3,7 @@
 
 #include <opencv2/core/mat.hpp>
 #include <opencv2/videoio.hpp>
+
 #include "stabilizer.h"
 
 namespace vid {
@@ -22,11 +23,14 @@ class video {
   /**
    * @brief Exports the stabilized video to the given file path.
    */
-  [[nodiscard]] auto export_to_file(std::string const& save_dir) const noexcept -> bool;
+  [[nodiscard]] auto export_to_file(std::string const& save_dir) const noexcept
+      -> bool;
 
   [[nodiscard]] auto n_frames() const noexcept -> size_t;
 
-  [[nodiscard]] auto empty() const noexcept -> bool { return original_frames_.empty(); }
+  [[nodiscard]] auto empty() const noexcept -> bool {
+    return original_frames_.empty();
+  }
 
  private:
   std::vector<cv::Mat> original_frames_;
@@ -36,6 +40,9 @@ class video {
 
   auto load_frames(std::vector<std::string> const& frames_file_paths) noexcept
       -> void;
+
+  static auto padded_string(const int n, const int frame_count) noexcept
+      -> std::string;
 };
 }  // namespace vid
 

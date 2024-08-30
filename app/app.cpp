@@ -86,7 +86,8 @@ auto main() -> int {
 
   // TODO: Add logging support
   std::cout << "Using OpenGL " << glGetString(GL_VERSION) << '\n';
-  std::cout << "Using GLAD " << GLVersion.major << "." << GLVersion.minor << '\n';
+  std::cout << "Using GLAD " << GLVersion.major << "." << GLVersion.minor
+            << '\n';
   std::cout << "Using GLFW " << glfw_major << "." << glfw_minor << "."
             << glfw_revision << '\n';
   std::cout << "Using ImGui " << IMGUI_VERSION << "\n";

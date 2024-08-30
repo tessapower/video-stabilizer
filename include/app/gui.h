@@ -3,9 +3,7 @@
 
 #include <glad/glad.h>
 
-#include <filesystem>
 #include <iostream>
-#include <vector>
 
 #include "GLFW/glfw3.h"
 #include "imgui.h"

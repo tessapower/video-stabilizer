@@ -12,8 +12,7 @@ class stabilizer {
  public:
   explicit stabilizer() = default;
 
-  explicit stabilizer(std::vector<cv::Mat> const& frames)
-      : frames_{frames} {}
+  explicit stabilizer(std::vector<cv::Mat> const& frames) : frames_{frames} {}
 
   auto frames(std::vector<cv::Mat> const& f) { frames_ = f; }
 

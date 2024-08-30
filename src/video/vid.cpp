@@ -1,12 +1,13 @@
 #include "video/vid.h"
 
+#include <opencv2/core/core_c.h>
+
 #include <filesystem>
 #include <iostream>
 #include <opencv2/core.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/videoio.hpp>
-#include <opencv2/core/core_c.h>
 
 #include "video/stabilizer.h"
 
@@ -50,7 +51,9 @@ auto video::load_video_from_file(std::string const& video_file_path) noexcept
 
   std::cout << "Opened video file: " << video_file_path << "\n";
   std::cout << "FPS: " << fps_ << "\n";
-  std::cout << "Frame Count: " << video.get(cv::CAP_PROP_FRAME_COUNT) << "\n";
+  const auto frame_count =
+      static_cast<int>(video.get(cv::CAP_PROP_FRAME_COUNT));
+  std::cout << "Frame Count: " << frame_count << "\n";
 
   // Create a tmp directory to store the frames
   if (!std::filesystem::exists(".//tmp")) {
