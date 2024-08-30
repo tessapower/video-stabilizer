@@ -103,18 +103,18 @@ auto video::export_to_file(std::string const& save_dir) const noexcept -> bool {
   }
 
   const auto save_location = std::string{save_dir + "/stabilized_video_0.avi"};
-  const auto size = stabilized_frames[0].size();
+  const auto dimensions = stabilized_frames[0].size();
 
   // TODO: convert to logs
   std::cout << "FPS: " << fps_ << "\n";
   std::cout << "FOURCC Codec : " << fourcc_ << "\n";
-  std::cout << "Size: " << size << "\n";
+  std::cout << "Dimensions: " << dimensions << "\n";
 
   // Create a VideoWriter object
   cv::VideoWriter writer;
   // TODO: Use codec based on platform, currently using "DIVX" for Windows.
   const auto fourcc = cv::VideoWriter::fourcc('D', 'I', 'V', 'X');
-  writer.open(save_location, fourcc, fps_, size, true);
+  writer.open(save_location, fourcc, fps_, dimensions, true);
 
   if (!writer.isOpened()) {
     // TODO: convert to logs
