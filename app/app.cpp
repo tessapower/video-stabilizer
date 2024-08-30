@@ -128,10 +128,7 @@ auto main() -> int {
     std::this_thread::sleep_for(std::chrono::milliseconds(1));
   }
 
-  // TODO: select load video from disk
-  // TODO: detect(?) and set frame rate
   // TODO: play the original and stabilized video for side-by-side comparison
-  // TODO: save video to disk
 
   // Happy path: clean up and exit
   app::shutdown(window);

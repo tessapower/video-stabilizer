@@ -68,11 +68,11 @@ inline auto render(GLFWwindow* window) -> void {
         video_loaded = !app::video.empty();
         if (video_loaded) {
           app::logger.add_log("Video loaded successfully!\n");
+          // TODO: add original video preview?
         } else {
           app::logger.add_log("Error: Could not load video.\n");
         }
       }
-      // TODO: add original video preview?
     }
     ImGui::SameLine();
 
@@ -88,6 +88,7 @@ inline auto render(GLFWwindow* window) -> void {
       video_stabilized = app::video.stabilize();
       if (video_stabilized) {
         app::logger.add_log("Video stabilized successfully!\n");
+        // TODO: Display stabilized video?
       } else {
         app::logger.add_log("There was a problem stabilizing your video.\n");
       }
