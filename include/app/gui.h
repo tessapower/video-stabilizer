@@ -74,12 +74,19 @@ inline auto render(GLFWwindow* window) -> void {
           app::logger.add_log("Error: Could not load video.\n");
         }
       }
+      // TODO: add original video preview?
     }
     ImGui::SameLine();
 
     ImGui::BeginDisabled(!video_loaded && !video_stabilized);
     if (ImGui::Button("Stabilize")) {
       app::logger.add_log("Stabilizing video...\n");
+      // TODO: Add a progress bar for stabilization
+      // TODO: Add callback function to update progress bar
+      // TODO: Add callback function to update logger
+
+      // TODO: stabilize video in another thread, temporarily disable
+      // appropriate buttons
       video_stabilized = app::video.stabilize();
       if (video_stabilized) {
         app::logger.add_log("Video stabilized successfully!\n");
@@ -107,7 +114,7 @@ inline auto render(GLFWwindow* window) -> void {
     }
     ImGui::EndDisabled();
 
-    // TODO: Add stats like the file name, frame rate, resolution, etc. 
+    // TODO: Add stats like the file name, frame rate, resolution, etc.
 
     ImGui::Spacing();
 
