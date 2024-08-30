@@ -3,6 +3,7 @@
 
 #include <glad/glad.h>
 
+#include <filesystem>
 #include <iostream>
 #include <vector>
 
@@ -11,6 +12,7 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 #include "utils.h"
+#include "video/vid.h"
 
 namespace gui {
 inline static constexpr auto window_flags =
@@ -23,6 +25,9 @@ inline static constexpr auto popup_flags = ImGuiWindowFlags_NoResize |
                                            ImGuiWindowFlags_NoTitleBar;
 
 inline static constexpr auto popup_size = ImVec2(400.0f, 300.0f);
+
+inline static bool video_loaded = false;
+inline static bool video_stabilized = false;
 
 /**
  * Creates an ImGui button that is centered horizontally in the window.
@@ -60,30 +65,45 @@ inline auto render(GLFWwindow* window) -> void {
     if (ImGui::Button("Import Video")) {
       std::string path;
       if (utils::get_video_path(window, path)) {
-        std::cout << "Opening file: " << path << '\n';
-      }
-    }
-    ImGui::SameLine();
+        app::video = vid::video(path);
 
-    if (ImGui::Button("Import Frames")) {
-      std::vector<std::string> paths;
-      if (utils::get_frame_paths(window, paths)) {
-        for (const auto& path : paths) {
-          std::cout << "Opening file: " << path << '\n';
+        video_loaded = !app::video.empty();
+        if (video_loaded) {
+          app::logger.add_log("Video loaded successfully!\n");
+        } else {
+          app::logger.add_log("Error: Could not load video.\n");
         }
       }
     }
     ImGui::SameLine();
 
-    ImGui::BeginDisabled(true);
+    ImGui::BeginDisabled(!video_loaded && !video_stabilized);
     if (ImGui::Button("Stabilize")) {
-      std::cout << "Stabilize and crop the video...\n";
+      app::logger.add_log("Stabilizing video...\n");
+      video_stabilized = app::video.stabilize();
+      if (video_stabilized) {
+        app::logger.add_log("Video stabilized successfully!\n");
+      } else {
+        app::logger.add_log("There was a problem stabilizing your video.\n");
+      }
     }
     ImGui::EndDisabled();
+    ImGui::SameLine();
 
-    ImGui::BeginDisabled(true);
+    ImGui::BeginDisabled(!video_stabilized);
     if (ImGui::Button("Save")) {
-      std::cout << "Save current video project...\n";
+      std::string path;
+      if (utils::get_save_directory(path)) {
+        if (app::video.export_to_file(path)) {
+          app::logger.add_log("Saving video...");
+          app::logger.add_log("Video saved successfully!\n");
+
+          video_loaded = false;
+          video_stabilized = false;
+        } else {
+          app::logger.add_log("Error: Could not save video.\n");
+        }
+      }
     }
     ImGui::EndDisabled();
 

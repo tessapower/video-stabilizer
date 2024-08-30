@@ -11,12 +11,13 @@
 #include <GLFW/glfw3.h>
 
 #include "log.h"
+#include "video/vid.h"
 
 namespace app {
-
 static constexpr int window_width = 500;
 static constexpr int window_height = 600;
 static gui::log logger;
+static vid::video video;
 
 /**
  * @brief Returns a string representing the error source.
