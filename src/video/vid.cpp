@@ -32,6 +32,18 @@ auto video::load_frames(
   }
 }
 
+auto video::padded_string(const int n, const int frame_count) noexcept
+    -> std::string {
+  std::string s = std::to_string(n);
+  const auto fc_str = std::to_string(frame_count);
+
+  while (s.length() < fc_str.length()) {
+    s.insert(s.begin(), '0');
+  }
+
+  return s;
+}
+
 auto video::load_video_from_file(std::string const& video_file_path) noexcept
     -> void {
   // Clear out old data
@@ -65,8 +77,7 @@ auto video::load_video_from_file(std::string const& video_file_path) noexcept
   auto i = 0;
   while (video.read(frame)) {
     const auto file_name = std::string{
-      ".//tmp//frame_" + std::to_string(i++) + ".png"
-    };
+        ".//tmp//frame_" + padded_string(i++, frame_count) + ".png"};
     cv::imwrite(file_name, frame);
   }
 
