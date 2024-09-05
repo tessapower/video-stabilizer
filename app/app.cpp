@@ -51,6 +51,7 @@ auto main() -> int {
   //----------------------------------------------- Initialize GLFW system --//
   // TODO: Create error codes to handle initialization errors
   if (!app::init_glfw()) {
+    // TODO: convert to debug log statement
     std::cerr << "Error: Could not initialize GLFW" << '\n';
     abort();
   }
@@ -63,6 +64,7 @@ auto main() -> int {
                                        "Video Stabilizer", nullptr, nullptr);
 
   if (!window) {
+    // TODO: convert to debug log statement
     std::cerr << "Error: Could not create GLFW window" << '\n';
     abort();
   }
@@ -79,18 +81,16 @@ auto main() -> int {
   // Enable debugging OpenGL and pass it a callback function to use
   glEnable(GL_DEBUG_OUTPUT);
   glDebugMessageCallback(app::debug_cb, nullptr);
+  
+  //-------------------------------- Log dependency versions to debug logs --//
+  // TODO: add support for debug logs
+  // int glfw_major, glfw_minor, glfw_revision;
+  // glfwGetVersion(&glfw_major, &glfw_minor, &glfw_revision);
 
-  //------------------------------------ Log dependency versions to stdout --//
-  int glfw_major, glfw_minor, glfw_revision;
-  glfwGetVersion(&glfw_major, &glfw_minor, &glfw_revision);
-
-  // TODO: Add logging support
-  std::cout << "Using OpenGL " << glGetString(GL_VERSION) << '\n';
-  std::cout << "Using GLAD " << GLVersion.major << "." << GLVersion.minor
-            << '\n';
-  std::cout << "Using GLFW " << glfw_major << "." << glfw_minor << "."
-            << glfw_revision << '\n';
-  std::cout << "Using ImGui " << IMGUI_VERSION << "\n";
+  // "Using OpenGL %s\n", glGetString(GL_VERSION)
+  // "Using GLAD %s.%s\n", GLVersion.major, GLVersion.minor
+  // "Using GLFW %s.%s.%s\n", glfw_major, glfw_minor, glfw_revision
+  // "Using ImGui %s\n", IMGUI_VERSION
 
   //----------------------------------------------------- Initialize ImGui --//
   // This handles all the verbose setup code for our ImGui window

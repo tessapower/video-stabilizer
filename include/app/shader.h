@@ -49,6 +49,7 @@ class shader_builder {
     const std::ifstream file_stream(std::filesystem::current_path().string() + file_name);
 
     if (!file_stream) {
+      // TODO: convert to debug log
       std::cerr << "Error: Could not locate and open file " << file_name
                 << '\n';
       throw std::runtime_error("Error: Could not locate and open file " +
@@ -61,6 +62,7 @@ class shader_builder {
     try {
       set_shader_source(type, buffer.str());
     } catch (shader_compile_error &e) {
+      // TODO: convert to debug log
       std::cerr << "Error: Could not compile " << file_name << '\n';
       std::cerr << "Shader Error: " << e.what() << "\n";
       throw;
@@ -156,6 +158,7 @@ class shader_builder {
     if (info_log_length > 1) {
       std::vector<char> info_log(info_log_length);
       glGetShaderInfoLog(obj, info_log_length, &chars_written, info_log.data());
+      // TODO: convert to debug log
       std::cout << "SHADER:\n" << info_log.data() << '\n';
     }
   }
@@ -168,6 +171,7 @@ class shader_builder {
       std::vector<char> info_log(info_log_length);
       glGetProgramInfoLog(obj, info_log_length, &chars_written,
                           info_log.data());
+      // TODO: convert to debug log
       std::cout << "PROGRAM:\n" << info_log.data() << '\n';
     }
   }
