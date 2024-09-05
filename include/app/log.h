@@ -1,23 +1,40 @@
 #ifndef LOG_H
 #define LOG_H
 
-#include <iostream>
+#include <mutex>
 
 #include "imgui.h"
 #include "utils.h"
 
 namespace gui {
 // TODO: convert to singleton.
-struct log {
-  ImGuiTextBuffer buf;
-  // Index to lines offset. We maintain this with add_log() calls.
-  ImVector<int> line_offsets;
-  bool auto_scroll = true;
-  static constexpr float footer_buffer = 38.0f;
+class log {
+  static log* instance_;
+  static std::mutex mutex_;
 
+protected:
   log() { clear_log(); }
 
   ~log() { clear_log(); }
+
+  bool auto_scroll = true;
+  ImGuiTextBuffer buf;
+  // Index to lines offset. We maintain this with add_log() calls.
+  ImVector<int> line_offsets;
+  static constexpr float footer_buffer = 38.0f;
+
+public:
+  /**
+   * Cloning operator is disabled for <code>log</code>.
+   */
+  log(log& other) = delete;
+
+  /**
+   * Assignment operator is disabled for <code>log</code>.
+   */
+  auto operator=(const log&) -> void = delete;
+
+  static auto instance() -> log*; 
 
   auto clear_log() -> void { buf.clear(); }
 
@@ -74,6 +91,17 @@ struct log {
     ImGui::Separator();
   }
 };
+
+log* log::instance_{nullptr};
+std::mutex log::mutex_;
+
+inline log* log::instance() {
+  std::lock_guard<std::mutex> lock(log::mutex_);
+  if (instance_ == nullptr) {
+    instance_ = new log();
+  }
+  return instance_;
+}
 }  // namespace gui
 
 #endif  // LOG_H

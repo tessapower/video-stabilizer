@@ -67,10 +67,10 @@ inline auto render(GLFWwindow* window) -> void {
 
         video_loaded = !app::video.empty();
         if (video_loaded) {
-          app::logger.add_log("Video loaded successfully!\n");
+          log::instance()->add_log("Video loaded successfully!\n");
           // TODO: add original video preview?
         } else {
-          app::logger.add_log("Error: Could not load video.\n");
+          log::instance()->add_log("Error: Could not load video.\n");
         }
       }
     }
@@ -78,7 +78,7 @@ inline auto render(GLFWwindow* window) -> void {
 
     ImGui::BeginDisabled(!video_loaded && !video_stabilized);
     if (ImGui::Button("Stabilize")) {
-      app::logger.add_log("Stabilizing video...\n");
+      log::instance()->add_log("Stabilizing video...\n");
       // TODO: Add a progress bar for stabilization
       // TODO: Add callback function to update progress bar
       // TODO: Add callback function to update logger
@@ -87,10 +87,11 @@ inline auto render(GLFWwindow* window) -> void {
       // appropriate buttons
       video_stabilized = app::video.stabilize();
       if (video_stabilized) {
-        app::logger.add_log("Video stabilized successfully!\n");
+        log::instance()->add_log("Video stabilized successfully!\n");
         // TODO: Display stabilized video?
       } else {
-        app::logger.add_log("There was a problem stabilizing your video.\n");
+        log::instance()->add_log(
+            "There was a problem stabilizing your video.\n");
       }
     }
     ImGui::EndDisabled();
@@ -101,13 +102,13 @@ inline auto render(GLFWwindow* window) -> void {
       std::string path;
       if (utils::get_save_directory(path)) {
         if (app::video.export_to_file(path)) {
-          app::logger.add_log("Saving video...\n");
-          app::logger.add_log("Video saved successfully!\n");
+          log::instance()->add_log("Saving video...\n");
+          log::instance()->add_log("Video saved successfully!\n");
 
           video_loaded = false;
           video_stabilized = false;
         } else {
-          app::logger.add_log("Error: Could not save video.\n");
+          log::instance()->add_log("Error: Could not save video.\n");
         }
       }
     }
@@ -122,10 +123,10 @@ inline auto render(GLFWwindow* window) -> void {
     if (ImGui::Button("Help")) {
       // ImGui::OpenPopup("help_popup");
       // TODO: decide whether we like the help popup or help log better
-      app::logger.add_log("This will display the help menu.\n");
+      log::instance()->add_log("This will display the help menu.\n");
     }
     ImGui::SameLine();
-    app::logger.draw();
+    log::instance()->draw();
     ImGui::Spacing();
 
     //------------------------------------------------------------- Footer --//

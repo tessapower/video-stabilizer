@@ -17,7 +17,6 @@
 namespace app {
 static constexpr int window_width = 500;
 static constexpr int window_height = 600;
-static gui::log logger;
 static vid::video video;
 
 /**
