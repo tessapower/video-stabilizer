@@ -145,8 +145,4 @@ auto video::export_to_file(std::string const& save_dir) const noexcept -> bool {
 
   return true;
 }
-
-auto video::n_frames() const noexcept -> size_t {
-  return original_frames_.size();
-}
 }  // namespace vid

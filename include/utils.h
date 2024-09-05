@@ -15,7 +15,6 @@
 
 #include <filesystem>
 #include <iostream>
-#include <vector>
 
 namespace utils {
 
@@ -36,9 +35,8 @@ inline auto get_video_path(GLFWwindow* window, std::string& path) -> bool {
   NFD_GetNativeWindowFromGLFWWindow(window, &args.parentWindow);
   args.filterList = filters;
   args.filterCount = 1;
-  nfdresult_t result = NFD_OpenDialogU8_With(&out_path, &args);
 
-  switch (result) {
+  switch (NFD_OpenDialogU8_With(&out_path, &args)) {
     case NFD_OKAY: {
       path = std::string{out_path};
       NFD_FreePathU8(out_path);
