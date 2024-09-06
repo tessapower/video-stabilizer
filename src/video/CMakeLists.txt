@@ -8,7 +8,6 @@ list(APPEND
 
 set(VIDEO_HEADERS
     "${PROJECT_SOURCE_DIR}/include/video/stabilizer.h"
-    "${PROJECT_SOURCE_DIR}/include/video/player.h"
     "${PROJECT_SOURCE_DIR}/include/video/vid.h"
 )
 
