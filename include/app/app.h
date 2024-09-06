@@ -11,7 +11,7 @@
 
 #include <iostream>
 
-#include "log.h"
+#include "log/log.h"
 #include "video/vid.h"
 
 namespace app {
