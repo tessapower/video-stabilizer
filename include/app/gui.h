@@ -11,6 +11,7 @@
 #include "imgui_impl_opengl3.h"
 #include "utils.h"
 #include "video/vid.h"
+#include "log/log.h"
 
 namespace gui {
 inline static constexpr auto window_flags =

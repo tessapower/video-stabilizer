@@ -10,8 +10,6 @@
 #include <nfd.h>
 
 #include <iostream>
-
-#include "log/log.h"
 #include "video/vid.h"
 
 namespace app {

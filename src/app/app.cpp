@@ -81,7 +81,7 @@ auto main() -> int {
   // Enable debugging OpenGL and pass it a callback function to use
   glEnable(GL_DEBUG_OUTPUT);
   glDebugMessageCallback(app::debug_cb, nullptr);
-  
+
   //-------------------------------- Log dependency versions to debug logs --//
   // TODO: add support for debug logs
   // int glfw_major, glfw_minor, glfw_revision;
