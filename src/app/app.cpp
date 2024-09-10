@@ -103,10 +103,30 @@ auto main() -> int {
   // Because we are using OpenGL, we need some default shaders, so we pass in
   // the bare minimum to the shader builder.
   app::shader_builder shader_builder;
-  shader_builder.set_shader(GL_VERTEX_SHADER,
-                            std::string("//shaders//vertex.glsl"));
-  shader_builder.set_shader(GL_FRAGMENT_SHADER,
-                            std::string("//shaders//fragment.glsl"));
+  const std::string vertex =
+      R"(
+#version 460 core
+
+layout (location = 0) in vec2 aPosition;
+
+void main() {
+  gl_Position = vec4(aPosition, 1.0, 1.0);
+}
+)";
+
+  const std::string fragment =
+      R"(
+#version 460 core
+
+layout (location = 0) out vec4 out_color;
+
+void main() {
+  out_color = vec4(1.0, 0.0, 0.0, 1.0);
+}
+)";
+
+  shader_builder.set_shader_source(GL_VERTEX_SHADER, vertex);
+  shader_builder.set_shader_source(GL_FRAGMENT_SHADER, fragment);
   const GLuint shader = shader_builder.build();
   glUseProgram(shader);
 
