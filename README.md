@@ -6,11 +6,12 @@ A small and simple program that utilizes computer vision algorithms to stabilize
 
 ## How Does it Work?
 
-By tracking key features across frames, estimating the camera's motion path, and applying smoothing techniques to reduce jitter. The stabilized output retains the original video's quality while creating a smoother viewing experience, ideal for correcting handheld footage or dynamic environments.
+By tracking key features across frames, estimating the camera's motion path, and applying smoothing techniques to reduce jitter. The stabilized output retains the original video's quality while creating a smoother viewing experience, which is ideal for correcting handheld footage or dynamic environments.
 
-Stabilized videos are slightly cropped — this is a trade-off to hide the artifacts introduced during stabilization, ensuring that the final video looks stable without showing the effects of frame alignment adjustments. During stabilization, the algorithm attempts to counteract shaky movements by shifting the frames accordingly. These shifts can create gaps or black borders around the edges of the video. To avoid showing these unwanted borders, the algorithm crops the video slightly so that the visible area remains consistent across all frames. The stabilization process also smooths out the motion path of the video, but since the camera’s original shaky movements had a wider area of view, reducing these jitters means focusing on a smaller, more consistent part of the frame.
+During stabilization, the algorithm attempts to counteract shaky movements by shifting the frames accordingly. These shifts can create gaps or black borders around the edges of the video. To avoid showing these unwanted borders, stabilized videos are slightly cropped—a small trade-off to hide the artifacts introduced. The stabilization process also smooths out the camera motion path, reducing jitters by focussing on a smaller, more consistent part of the frame.
 
 ## Usage
+
 
 TODO: Write usage instructions
 TODO: Add screenshots/gifs
