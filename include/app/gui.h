@@ -9,9 +9,9 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+#include "log/log.h"
 #include "utils.h"
 #include "video/vid.h"
-#include "log/log.h"
 
 namespace gui {
 inline static constexpr auto window_flags =
@@ -58,7 +58,8 @@ inline auto render(GLFWwindow* window) -> void {
   {
     //--------------------------------------------------- Window Content --//
     ImGui::TextWrapped(
-        "This is a short description of the program and what it does.\n\n");
+        "Smooth out shaky footage with this video stabilization tool! "
+        "Stabilized videos will be saved as a new file in your chosen folder.\n\n");
 
     //----------------------------------------------------- Action Buttons --//
     if (ImGui::Button("Import Video")) {

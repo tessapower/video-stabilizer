@@ -18,7 +18,7 @@
 ///
 ///   The above copyright notice and this permission notice shall be included
 ///   in all copies or substantial portions of the Software.
-///
+/// 
 ///   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
 ///   OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 ///   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
@@ -27,19 +27,11 @@
 ///   TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 ///   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ///
-/// USAGE: How to compile/run this file, e.g., "Compile with: g++ main.cpp -o
-/// myApp"
-///
-/// NOTES: This project expects that OpenCV is installed locally on your system
-///
 
 #include "app/app.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <imgui.h>
-#include <imgui_impl_glfw.h>
-#include <imgui_impl_opengl3.h>
 
 #include <glm/glm.hpp>
 #include <opencv2/opencv.hpp>
@@ -52,7 +44,7 @@ auto main() -> int {
   // TODO: Create error codes to handle initialization errors
   if (!app::init_glfw()) {
     // TODO: convert to debug log statement
-    std::cerr << "Error: Could not initialize GLFW" << '\n';
+    std::cerr << "Error: Could not initialize GLFW\n";
     abort();
   }
 
@@ -65,7 +57,7 @@ auto main() -> int {
 
   if (!window) {
     // TODO: convert to debug log statement
-    std::cerr << "Error: Could not create GLFW window" << '\n';
+    std::cerr << "Error: Could not create GLFW window\n";
     abort();
   }
 
@@ -75,8 +67,11 @@ auto main() -> int {
   glfwMakeContextCurrent(window);
 
   //----------------------------------------------- Initialize GLAD system --//
-  if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
-    throw std::runtime_error("Error initializing glad");
+  if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress))) {
+    // TODO: convert to debug log statement
+    std::cerr << "Error: Could not initialize GLAD\n";
+    abort();
+  }
 
   // Enable debugging OpenGL and pass it a callback function to use
   glEnable(GL_DEBUG_OUTPUT);
@@ -135,6 +130,10 @@ void main() {
   // Clear the background at least once before rendering the GUI
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
+  // Add initial message to log
+  log::instance()->add_log(
+      "Welcome! To learn how to use this program, click the \"Help\" button!\n");
+
   // TODO: create a close callback to handle cleaning up
   while (!glfwWindowShouldClose(window)) {
     glfwPollEvents();
@@ -147,8 +146,6 @@ void main() {
 
     std::this_thread::sleep_for(std::chrono::milliseconds(1));
   }
-
-  // TODO: play the original and stabilized video for side-by-side comparison
 
   // Happy path: clean up and exit
   app::shutdown(window);
