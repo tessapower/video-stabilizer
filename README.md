@@ -12,8 +12,14 @@ During stabilization, the algorithm attempts to counteract shaky movements by sh
 
 ## Usage
 
+The program should be very straight forward to use. Follow the steps below to stabilize a video:
 
-TODO: Write usage instructions
+- Start by clicking the `Import Video` button to select a video. Supported formats are `.MOV` ,`.MP4` or `.MPEG4`, `.WMV`, `.AVI`, and .`.FLV`.
+- Once selected, the program will load your video.
+- Click the `Stabilize` button. The program will begin stabilizing your video.
+- When the video is finished, you'll see a message displayed in the log area.
+- Click the `Save` button to select the folder where your stabilized video will be saved. The stabilized video will be saved as a new file with a different name.
+
 TODO: Add screenshots/gifs
 
 ## Limitations
@@ -37,11 +43,13 @@ To build this project, please ensure that your system has the following software
 - [ ] Preview of original video
 - [ ] Preview of stabilized video
 - [ ] Run stabilization in dedicated thread
+- [ ] Custom file name for stabilized video
 - [ ] Add support for logging
 - [ ] Display video meta-data
 - [ ] Support codecs for other platforms (currently only supports DIVX)
 - [ ] Support multiple output formats
 - [ ] Support running on MacOS and mainstream Linux distros
+- [ ] Set up a vcpkg binary cache using [GitHub Actions Cache](https://learn.microsoft.com/en-us/vcpkg/consume/binary-caching-github-actions-cache)
 
 ## Attributions
 
