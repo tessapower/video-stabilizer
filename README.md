@@ -9,9 +9,11 @@ An application of Lowe's Scale-Invariant Feature Transform (SIFT)[^1] feature de
 [^2]: Fischler, Martin A., and Robert C. Bolles. "Random sample consensus: A paradigm for model fitting with applications to image analysis and automated cartography." _Communications of the ACM_, vol. 24, no. 6, 1981, pp. 381-395. [https://doi.org/10.1145/358669.358692](https://doi.org/10.1145/358669.358692).
 
 
-By tracking key features across frames, estimating the camera's motion path, and applying smoothing techniques to reduce jitter. The stabilized output retains the original video's quality while creating a smoother viewing experience, which is ideal for correcting handheld footage or dynamic environments.
+## Example
 
-During stabilization, the algorithm attempts to counteract shaky movements by shifting the frames accordingly. These shifts can create gaps or black borders around the edges of the video. To avoid showing these unwanted borders, stabilized videos are slightly cropped—a small trade-off to hide the artifacts introduced. The stabilization process also smooths out the camera motion path, reducing jitters by focussing on a smaller, more consistent part of the frame.
+| Original | Stabilized |
+|:--------:|:----------:|
+| ![Original Video](./docs/original.gif) | ![Stabilized Video](./docs/stabilized.gif) |
 
 ## Usage
 
