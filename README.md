@@ -60,16 +60,4 @@ To build this project, please ensure that your system has the following software
 
 ## Attributions
 
-The user interface was created using [ImGui](https://github.com/ocornut/imgui), and the computer vision algorithms were implemented with the [OpenCV library](https://opencv.org/).
-
-## Contributing
-
-Contributions to enhance and improve this project are welcome! If you would like to contribute, please follow these steps:
-
-1. **Fork the repository**: Create your own copy of the project by forking this repository.
-2. **Create a branch**: Work on your feature, bug fix, or enhancement in a separate branch (`git checkout -b your-feature-branch`).
-3. **Write clear code**: Ensure your code is readable, maintainable, and well-documented. Follow the project’s coding guidelines.
-4. **Test your changes**: Run any existing tests and, if applicable, write new tests to validate your changes.
-5. **Submit a pull request**: Once your changes are ready, open a pull request with a clear description of the problem solved or improvement made.
-
-Your contributions and efforts to make this project better are greatly appreciated!
+The user interface was created using [ImGui](https://github.com/ocornut/imgui), and the stabilization algorithm was implemented using the [OpenCV library](https://opencv.org/).
