@@ -9,6 +9,7 @@ list(APPEND
 set(APP_HEADERS
     "${PROJECT_SOURCE_DIR}/include/app/app.h"
     "${PROJECT_SOURCE_DIR}/include/app/gui.h"
+    "${PROJECT_SOURCE_DIR}/include/app/model.h"
     "${PROJECT_SOURCE_DIR}/include/app/shader.h"
     "${PROJECT_SOURCE_DIR}/include/utils.h"
 )
