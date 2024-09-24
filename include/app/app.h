@@ -19,6 +19,8 @@ static constexpr int window_height = 600;
 
 static model mod;
 
+static std::thread worker;
+
 inline auto state_changed(const state old_state, const state new_state)
     -> void {
   switch (old_state) {
@@ -76,6 +78,59 @@ inline auto state_changed(const state old_state, const state new_state)
   }
 }
 
+inline auto on_load_clicked() -> void {
+// Ensure the previous thread has finished before starting a
+  // new one
+  if (worker.joinable()) worker.join();
+  if (utils::get_video_path(window, mod.video_path)) {
+    mod.transition_to_state(state::loading);
+    worker = std::thread([](model &m) {
+          // Create a new video object if it doesn't exist
+          if (!m.video) {
+            m.video = new vid::video(m.video_path);
+          } else {
+            m.video->load_video_from_file(m.video_path);
+          }
+
+          // If we failed to load a video, reset the pointer
+          if (m.video && m.video->empty()) {
+            m.video = nullptr;
+            m.video_path = "";
+          } else {
+            m.last_save_successful = false;
+            m.video_stabilized = false;
+            m.save_dir = "";
+          }
+
+          m.transition_to_state(state::waiting);
+        }, std::ref(mod));
+  }
+}
+
+inline auto on_stabilize_clicked() -> void {
+  if (worker.joinable()) worker.join();
+
+  mod.transition_to_state(state::stabilizing);
+
+  worker = std::thread([](model &m) {
+      m.video_stabilized = m.video->stabilize();
+
+      m.transition_to_state(state::waiting);
+  }, std::ref(mod));
+}
+
+inline auto on_save_clicked() -> void {
+  if (worker.joinable()) worker.join();
+
+  mod.transition_to_state(state::saving);
+  if (utils::get_save_directory(mod.save_dir)) {
+    worker = std::thread([&](model &m) {
+          m.last_save_successful = m.video->export_to_file(m.save_dir);
+
+        m.transition_to_state(state::waiting);
+    }, std::ref(mod));
+  }
+}
 
 /**
  * @brief Returns a string representing the error source.
@@ -207,6 +262,8 @@ inline auto shutdown(GLFWwindow *window) -> void {
 
   glfwDestroyWindow(window);
   glfwTerminate();
+
+  if (worker.joinable()) worker.join();
 }
 }  // namespace app
 
