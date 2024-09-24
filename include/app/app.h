@@ -10,12 +10,72 @@
 #include <nfd.h>
 
 #include <iostream>
-#include "video/vid.h"
+
+#include "model.h"
 
 namespace app {
 static constexpr int window_width = 500;
 static constexpr int window_height = 600;
-static vid::video video;
+
+static model mod;
+
+inline auto state_changed(const state old_state, const state new_state)
+    -> void {
+  switch (old_state) {
+    case state::waiting: {
+      switch (new_state) {
+        case state::loading: {
+          log::instance()->add_log("Loading video...\n");
+          break;
+        }
+        case state::stabilizing: {
+          log::instance()->add_log("Stabilizing video...\n");
+          break;
+        }
+        case state::saving: {
+          log::instance()->add_log("Saving video...\n");
+          break;
+        }
+        case state::waiting:
+          break;
+      }
+
+      break;
+    }
+    case state::loading: {
+      if (new_state != state::waiting) {
+        // Some kind of error!
+      }
+
+      log::instance()->add_log(
+          "%s\n", (mod.did_load() ? "Video loaded!\n"
+                                  : "Error: video could not be loaded :(\n"));
+      break;
+    }
+    case state::stabilizing: {
+      if (new_state != state::waiting) {
+        // Some kind of error!
+      }
+
+      log::instance()->add_log(
+          "%s\n",
+          (mod.is_stabilized() ? "Video stabilized!\n"
+                               : "Error: video could not be stabilized :(\n"));
+      break;
+    }
+    case state::saving: {
+      if (new_state != state::waiting) {
+        // Some kind of error!
+      }
+
+      log::instance()->add_log(
+          "%s\n", (mod.did_save() ? "Video saved!\n"
+                                  : "Error: video could not be saved :(\n"));
+      break;
+    }
+  }
+}
+
 
 /**
  * @brief Returns a string representing the error source.
