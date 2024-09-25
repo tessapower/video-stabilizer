@@ -38,7 +38,7 @@ inline auto centered_button(std::string const& text) -> bool {
  * Renders the graphical user interface in the given window. Forwards user
  * actions to the appropriate functions.
  */
-inline auto render(GLFWwindow* window) -> void {
+inline auto render() -> void {
   ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplGlfw_NewFrame();
   ImGui::NewFrame();

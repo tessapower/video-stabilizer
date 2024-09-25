@@ -17,6 +17,8 @@ namespace app {
 static constexpr int window_width = 500;
 static constexpr int window_height = 600;
 
+static GLFWwindow *window;
+
 static model mod;
 
 static std::thread worker;
@@ -216,7 +218,7 @@ inline auto debug_cb(const GLenum source, const GLenum type, const GLuint id,
  * Initializes ImGui system.
  * @return True if initialization was successful, otherwise false.
  */
-inline auto init_imgui(GLFWwindow *window) -> bool {
+inline auto init_imgui() -> bool {
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
   ImGui_ImplGlfw_InitForOpenGL(window, true);
@@ -253,7 +255,7 @@ inline auto init_glfw() -> bool {
 /**
  * @brief Shuts down all appropriate systems.
  */
-inline auto shutdown(GLFWwindow *window) -> void {
+inline auto shutdown() -> void {
   ImGui_ImplOpenGL3_Shutdown();
   ImGui_ImplGlfw_Shutdown();
   ImGui::DestroyContext();
