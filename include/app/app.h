@@ -1,12 +1,12 @@
 #ifndef APP_H
 #define APP_H
 
+// Always ensure GLAD is included before GLFW or face compiler errors!
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
-#include <imgui_internal.h>
 #include <nfd.h>
 
 #include <iostream>
@@ -81,12 +81,13 @@ inline auto state_changed(const state old_state, const state new_state)
 }
 
 inline auto on_load_clicked() -> void {
-// Ensure the previous thread has finished before starting a
+  // Ensure the previous thread has finished before starting a
   // new one
   if (worker.joinable()) worker.join();
   if (utils::get_video_path(window, mod.video_path)) {
     mod.transition_to_state(state::loading);
-    worker = std::thread([](model &m) {
+    worker = std::thread(
+        [](model &m) {
           // Create a new video object if it doesn't exist
           if (!m.video) {
             m.video = new vid::video(m.video_path);
@@ -105,7 +106,8 @@ inline auto on_load_clicked() -> void {
           }
 
           m.transition_to_state(state::waiting);
-        }, std::ref(mod));
+        },
+        std::ref(mod));
   }
 }
 
@@ -114,11 +116,13 @@ inline auto on_stabilize_clicked() -> void {
 
   mod.transition_to_state(state::stabilizing);
 
-  worker = std::thread([](model &m) {
-      m.video_stabilized = m.video->stabilize();
+  worker = std::thread(
+      [](model &m) {
+        m.video_stabilized = m.video->stabilize();
 
-      m.transition_to_state(state::waiting);
-  }, std::ref(mod));
+        m.transition_to_state(state::waiting);
+      },
+      std::ref(mod));
 }
 
 inline auto on_save_clicked() -> void {
@@ -126,11 +130,13 @@ inline auto on_save_clicked() -> void {
 
   mod.transition_to_state(state::saving);
   if (utils::get_save_directory(mod.save_dir)) {
-    worker = std::thread([&](model &m) {
+    worker = std::thread(
+        [&](model &m) {
           m.last_save_successful = m.video->export_to_file(m.save_dir);
 
-        m.transition_to_state(state::waiting);
-    }, std::ref(mod));
+          m.transition_to_state(state::waiting);
+        },
+        std::ref(mod));
   }
 }
 

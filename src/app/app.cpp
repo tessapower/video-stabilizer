@@ -18,7 +18,7 @@
 ///
 ///   The above copyright notice and this permission notice shall be included
 ///   in all copies or substantial portions of the Software.
-/// 
+///
 ///   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
 ///   OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 ///   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
@@ -29,9 +29,6 @@
 ///
 
 #include "app/app.h"
-
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
 
 #include <glm/glm.hpp>
 #include <opencv2/opencv.hpp>
@@ -46,66 +43,66 @@ auto APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int) -> int {
 #ifndef WIN32
 auto main() -> int {
 #endif
-  //----------------------------------------------- Initialize GLFW system --//
-  // TODO: Create error codes to handle initialization errors
-  if (!app::init_glfw()) {
-    // TODO: convert to debug log statement
-    std::cerr << "Error: Could not initialize GLFW\n";
-    abort();
-  }
+    //--------------------------------------------- Initialize GLFW system --//
+    // TODO: Create error codes to handle initialization errors
+    if (!app::init_glfw()) {
+      // TODO: convert to debug log statement
+      std::cerr << "Error: Could not initialize GLFW\n";
+      abort();
+    }
 
-  //--------------------------------------------------- Create GLFW window --//
-  // Do not support resizing the window to keep things simple
-  glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+    //------------------------------------------------- Create GLFW window --//
+    // Do not support resizing the window to keep things simple
+    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
-  const auto window = glfwCreateWindow(app::window_width, app::window_height,
-                                       "Video Stabilizer", nullptr, nullptr);
+    app::window = glfwCreateWindow(app::window_width, app::window_height,
+                                   "Video Stabilizer", nullptr, nullptr);
 
-  if (!window) {
-    // TODO: convert to debug log statement
-    std::cerr << "Error: Could not create GLFW window\n";
-    abort();
-  }
+    if (!app::window) {
+      // TODO: convert to debug log statement
+      std::cerr << "Error: Could not create GLFW window\n";
+      abort();
+    }
 
-  // TODO: set up the window to open centered on the screen
-  glfwSetWindowPos(window, 100, 100);
-  // Make our new window the current context for OpenGL
-  glfwMakeContextCurrent(window);
+    // TODO: set up the window to open centered on the screen
+    glfwSetWindowPos(app::window, 100, 100);
+    // Make our new window the current context for OpenGL
+    glfwMakeContextCurrent(app::window);
 
-  //----------------------------------------------- Initialize GLAD system --//
-  if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress))) {
-    // TODO: convert to debug log statement
-    std::cerr << "Error: Could not initialize GLAD\n";
-    abort();
-  }
+    //--------------------------------------------- Initialize GLAD system --//
+    if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress))) {
+      // TODO: convert to debug log statement
+      std::cerr << "Error: Could not initialize GLAD\n";
+      abort();
+    }
 
-  // Enable debugging OpenGL and pass it a callback function to use
-  glEnable(GL_DEBUG_OUTPUT);
-  glDebugMessageCallback(app::debug_cb, nullptr);
+    // Enable debugging OpenGL and pass it a callback function to use
+    glEnable(GL_DEBUG_OUTPUT);
+    glDebugMessageCallback(app::debug_cb, nullptr);
 
-  //-------------------------------- Log dependency versions to debug logs --//
-  // TODO: add support for debug logs
-  // int glfw_major, glfw_minor, glfw_revision;
-  // glfwGetVersion(&glfw_major, &glfw_minor, &glfw_revision);
+    //------------------------------ Log dependency versions to debug logs --//
+    // TODO: add support for debug logs
+    // int glfw_major, glfw_minor, glfw_revision;
+    // glfwGetVersion(&glfw_major, &glfw_minor, &glfw_revision);
 
-  // "Using OpenGL %s\n", glGetString(GL_VERSION)
-  // "Using GLAD %s.%s\n", GLVersion.major, GLVersion.minor
-  // "Using GLFW %s.%s.%s\n", glfw_major, glfw_minor, glfw_revision
-  // "Using ImGui %s\n", IMGUI_VERSION
+    // "Using OpenGL %s\n", glGetString(GL_VERSION)
+    // "Using GLAD %s.%s\n", GLVersion.major, GLVersion.minor
+    // "Using GLFW %s.%s.%s\n", glfw_major, glfw_minor, glfw_revision
+    // "Using ImGui %s\n", IMGUI_VERSION
 
-  //----------------------------------------------------- Initialize ImGui --//
-  // This handles all the verbose setup code for our ImGui window
-  app::init_imgui(window);
+    //--------------------------------------------------- Initialize ImGui --//
+    // This handles all the verbose setup code for our ImGui window
+    app::init_imgui();
 
-  //---------------------------------------- Initialize Native File Dialog --//
-  NFD_Init();
+    //-------------------------------------- Initialize Native File Dialog --//
+    NFD_Init();
 
-  //------------------------------------------------------ Compile Shaders --//
-  // Because we are using OpenGL, we need some default shaders, so we pass in
-  // the bare minimum to the shader builder.
-  app::shader_builder shader_builder;
-  const std::string vertex =
-      R"(
+    //---------------------------------------------------- Compile Shaders --//
+    // Because we are using OpenGL, we need some default shaders, so we pass in
+    // the bare minimum to the shader builder.
+    app::shader_builder shader_builder;
+    const std::string vertex =
+        R"(
 #version 460 core
 
 layout (location = 0) in vec2 aPosition;
@@ -115,8 +112,8 @@ void main() {
 }
 )";
 
-  const std::string fragment =
-      R"(
+    const std::string fragment =
+        R"(
 #version 460 core
 
 layout (location = 0) out vec4 out_color;
@@ -126,35 +123,44 @@ void main() {
 }
 )";
 
-  shader_builder.set_shader_source(GL_VERTEX_SHADER, vertex);
-  shader_builder.set_shader_source(GL_FRAGMENT_SHADER, fragment);
-  const GLuint shader = shader_builder.build();
-  glUseProgram(shader);
+    shader_builder.set_shader_source(GL_VERTEX_SHADER, vertex);
+    shader_builder.set_shader_source(GL_FRAGMENT_SHADER, fragment);
+    const GLuint shader = shader_builder.build();
+    glUseProgram(shader);
 
-  //------------------------------------------------------------ Main Loop --//
+    //-------------------------------------------------- Register Model CB --//
 
   // Clear the background at least once before rendering the GUI
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-  // Add initial message to log
-  log::instance()->add_log(
-      "Welcome! To learn how to use this program, click the \"Help\" button!\n");
+    //---------------------------------------------------------- Main Loop --//
 
-  // TODO: create a close callback to handle cleaning up
-  while (!glfwWindowShouldClose(window)) {
-    glfwPollEvents();
+    // Clear the background at least once before rendering the GUI
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-    gui::render(window);
+    // Add initial message to log
+    log::instance()->add_log(
+        "Welcome! To learn how to use this program, click the \"Help\" "
+        "button!\n");
 
-    // Swap the front and back buffers
-    glfwSwapBuffers(window);
-    glClear(GL_COLOR_BUFFER_BIT);
+    // TODO: create a close callback to handle cleaning up
+    while (!glfwWindowShouldClose(app::window)) {
+      glfwPollEvents();
 
     std::this_thread::sleep_for(std::chrono::milliseconds(1));
   }
 
-  // Happy path: clean up and exit
-  app::shutdown(window);
+      gui::render();
 
-  return EXIT_SUCCESS;
-}
+      // Swap the front and back buffers
+      glfwSwapBuffers(app::window);
+      glClear(GL_COLOR_BUFFER_BIT);
+
+      std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    }
+
+    // Happy path: clean up and exit
+    app::shutdown();
+
+    return EXIT_SUCCESS;
+  }
