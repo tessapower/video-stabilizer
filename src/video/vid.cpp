@@ -5,13 +5,30 @@
 #include <filesystem>
 #include <iostream>
 #include <opencv2/core.hpp>
-#include <opencv2/highgui.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/videoio.hpp>
 
 #include "video/stabilizer.h"
 
 namespace vid {
+video::video() {
+  original_frames_ = std::vector<cv::Mat>{};
+  stabilizer_ = vid::stabilizer{};
+  fps_ = 0;
+  fourcc_ = 0;
+}
+  
+video& video::operator=(video const& other) noexcept {
+  if (this != &other) {
+    original_frames_ = other.original_frames_;
+    stabilizer_ = other.stabilizer_;
+    fps_ = other.fps_;
+    fourcc_ = other.fourcc_;
+  }
+
+  return *this;
+}
+
 video::video(std::string const& video_file_path) {
   load_video_from_file(video_file_path);
 }
@@ -24,6 +41,7 @@ auto video::load_frames(
   for (const auto& path : frames_file_paths) {
     cv::Mat frame = cv::imread(path);
     if (frame.empty()) {
+      // TODO: convert to debug log
       std::cerr << "Error: Could not read image at \"" << path << "\"\n";
       continue;
     }
@@ -47,7 +65,11 @@ auto video::padded_string(const int n, const int frame_count) noexcept
 auto video::load_video_from_file(std::string const& video_file_path) noexcept
     -> void {
   // Clear out old data
-  original_frames_.clear();
+  if (!original_frames_.empty()) {
+    original_frames_.clear();
+    fps_ = 0;
+    fourcc_ = 0;
+  }
 
   // Create a VideoCapture Object
   auto video = cv::VideoCapture(video_file_path);
@@ -61,6 +83,7 @@ auto video::load_video_from_file(std::string const& video_file_path) noexcept
   fps_ = static_cast<int>(video.get(cv::CAP_PROP_FPS));
   fourcc_ = static_cast<int>(video.get(cv::CAP_PROP_FOURCC));
 
+  // TODO: convert to debug log
   std::cout << "Opened video file: " << video_file_path << "\n";
   std::cout << "FPS: " << fps_ << "\n";
   const auto frame_count =
@@ -94,11 +117,13 @@ auto video::load_video_from_file(std::string const& video_file_path) noexcept
 auto video::stabilize() noexcept -> bool {
   // Pass frames to stabilizer and do the work
   stabilizer_.frames(original_frames_);
+  // TODO: report progress to out var?
   stabilizer_.stabilize();
   stabilizer_.crop_frames();
 
   if (stabilizer_.stabilized_frames().empty()) {
-    std::cerr << "Could not stabilize video\n";
+    // TODO: convert to debug log
+    std::cerr << "Error: could not stabilize video\n";
 
     return false;
   }
@@ -109,14 +134,16 @@ auto video::stabilize() noexcept -> bool {
 auto video::export_to_file(std::string const& save_dir) const noexcept -> bool {
   const auto stabilized_frames = stabilizer_.stabilized_frames();
   if (stabilized_frames.empty()) {
+    // TODO: convert to debug log
     std::cerr << "Error: No stabilized frames to export\n";
     return false;
   }
 
+  // TODO: support user setting name of file
   const auto save_location = std::string{save_dir + "/stabilized_video_0.avi"};
   const auto dimensions = stabilized_frames[0].size();
 
-  // TODO: convert to logs
+  // TODO: convert to debug log
   std::cout << "FPS: " << fps_ << "\n";
   std::cout << "FOURCC Codec : " << fourcc_ << "\n";
   std::cout << "Dimensions: " << dimensions << "\n";
@@ -128,13 +155,13 @@ auto video::export_to_file(std::string const& save_dir) const noexcept -> bool {
   writer.open(save_location, fourcc, fps_, dimensions, true);
 
   if (!writer.isOpened()) {
-    // TODO: convert to logs
+    // TODO: convert to debug log
     std::cerr << "Error: Could not open the output video file to write.\n";
 
     return false;
   }
 
-  // TODO: convert to log statements
+  // TODO: convert to debug log
   std::cout << "Using " << writer.getBackendName() << " to write new file.\n";
   std::cout << stabilized_frames.size() << " frames to write\n";
 

@@ -8,8 +8,15 @@
 namespace vid {
 class video {
  public:
-  video() = default;
+  video();
   explicit video(std::string const& video_file_path);
+  video& operator=(const video& other) noexcept;  // Copy-Assignment Operator
+  ~video() = default;
+
+  // Delete unused constructors and assignment operators
+  video(video const& other) = delete; // Copy Constructor
+  video(video const&& other) = delete; // Move Constructor
+  video& operator=(const video&& other) = delete; // Move-Assignment Operator
 
   auto load_video_from_file(std::string const& video_file_path) noexcept
       -> void;
@@ -30,10 +37,10 @@ class video {
   }
 
  private:
-  std::vector<cv::Mat> original_frames_;
-  vid::stabilizer stabilizer_;
-  int fps_;
-  int fourcc_;
+  std::vector<cv::Mat> original_frames_{};
+  vid::stabilizer stabilizer_{};
+  int fps_ = 0;
+  int fourcc_ = 0;
 
   auto load_frames(std::vector<std::string> const& frames_file_paths) noexcept
       -> void;
