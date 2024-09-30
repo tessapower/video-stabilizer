@@ -130,8 +130,7 @@ void main() {
 
     //-------------------------------------------------- Register Model CB --//
 
-  // Clear the background at least once before rendering the GUI
-  glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    app::mod.set_state_change_cb(app::state_changed);
 
     //---------------------------------------------------------- Main Loop --//
 
@@ -147,8 +146,23 @@ void main() {
     while (!glfwWindowShouldClose(app::window)) {
       glfwPollEvents();
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(1));
-  }
+      switch (app::mod.state()) {
+        // TODO: add support for measuring progress and split these cases
+        case app::state::loading:
+        case app::state::stabilizing: {
+          // Get progress
+          log::instance()->add_log(
+              "Loading %c\n",
+              "|/-\\"[static_cast<int>(ImGui::GetTime() / 0.05f) & 3]);
+          // Update log
+          break;
+        }
+        case app::state::saving:
+        case app::state::waiting: {
+          // Do nothing
+          break;
+        }
+      }
 
       gui::render();
 
