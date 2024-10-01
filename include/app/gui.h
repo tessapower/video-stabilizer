@@ -86,7 +86,18 @@ inline auto render() -> void {
     if (ImGui::Button("Help")) {
       // ImGui::OpenPopup("help_popup");
       // TODO: decide whether we like the help popup or help log better
-      log::instance()->add_log("This will display the help menu.\n");
+      log::instance()->add_log(
+          "This will display the help menu.\n"
+          "This will display the help menu.\n"
+          "This will display the help menu.\n"
+          "This will display the help menu.\n"
+          "This will display the help menu.\n"
+          "This will display the help menu.\n"
+          "This will display the help menu.\n"
+          "This will display the help menu.\n"
+          "This will display the help menu.\n"
+          "This will display the help menu.\n"
+          "This will display the help menu.\n");
     }
     ImGui::SameLine();
     log::instance()->draw();
