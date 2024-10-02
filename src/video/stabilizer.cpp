@@ -5,8 +5,6 @@
 #include <opencv2/calib3d.hpp>
 #include <opencv2/imgproc.hpp>
 
-#include "log/log.h"
-
 namespace vid {
 //----------------------------------------------------------------- Public --//
 auto stabilizer::stabilize() noexcept -> void {

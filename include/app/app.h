@@ -12,6 +12,7 @@
 #include <iostream>
 
 #include "model.h"
+#include "logger/logger.h"
 
 namespace app {
 static constexpr int window_width = 500;
@@ -29,15 +30,15 @@ inline auto state_changed(const state old_state, const state new_state)
     case state::waiting: {
       switch (new_state) {
         case state::loading: {
-          log::instance()->add_log("Loading video...\n");
+          logger::instance()->add_log("Loading video...\n");
           break;
         }
         case state::stabilizing: {
-          log::instance()->add_log("Stabilizing video...\n");
+          logger::instance()->add_log("Stabilizing video...\n");
           break;
         }
         case state::saving: {
-          log::instance()->add_log("Saving video...\n");
+          logger::instance()->add_log("Saving video...\n");
           break;
         }
         case state::waiting:
@@ -50,21 +51,19 @@ inline auto state_changed(const state old_state, const state new_state)
       if (new_state != state::waiting) {
         // Some kind of error!
       }
-
-      log::instance()->add_log(
-          "%s\n", (mod.did_load() ? "Video loaded!\n"
-                                  : "Error: video could not be loaded :(\n"));
+      logger::instance()->add_log(
+          "%s\n", (mod.did_load() ? "Video loaded!"
+                                  : "Error: video could not be loaded :("));
       break;
     }
     case state::stabilizing: {
       if (new_state != state::waiting) {
         // Some kind of error!
       }
-
-      log::instance()->add_log(
+      logger::instance()->add_log(
           "%s\n",
-          (mod.is_stabilized() ? "Video stabilized!\n"
-                               : "Error: video could not be stabilized :(\n"));
+          (mod.is_stabilized() ? "Video stabilized!"
+                               : "Error: video could not be stabilized :("));
       break;
     }
     case state::saving: {
@@ -72,9 +71,9 @@ inline auto state_changed(const state old_state, const state new_state)
         // Some kind of error!
       }
 
-      log::instance()->add_log(
-          "%s\n", (mod.did_save() ? "Video saved!\n"
-                                  : "Error: video could not be saved :(\n"));
+      logger::instance()->add_log(
+          "%s\n", (mod.did_save() ? "Video saved!"
+                                  : "Error: video could not be saved :("));
       break;
     }
   }
