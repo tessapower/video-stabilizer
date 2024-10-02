@@ -138,7 +138,7 @@ void main() {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
     // Add initial message to log
-    log::instance()->add_log(
+    logger::instance()->add_log(
         "Welcome! To learn how to use this program, click the \"Help\" "
         "button!\n");
 

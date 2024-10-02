@@ -7,7 +7,7 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
-#include "log/log.h"
+#include "logger/logger.h"
 
 namespace gui {
 inline static constexpr auto window_flags =
@@ -86,7 +86,7 @@ inline auto render() -> void {
     if (ImGui::Button("Help")) {
       // ImGui::OpenPopup("help_popup");
       // TODO: decide whether we like the help popup or help log better
-      log::instance()->add_log(
+      logger::instance()->add_log(
           "This will display the help menu.\n"
           "This will display the help menu.\n"
           "This will display the help menu.\n"
@@ -100,7 +100,7 @@ inline auto render() -> void {
           "This will display the help menu.\n");
     }
     ImGui::SameLine();
-    log::instance()->draw();
+    logger::instance()->draw();
     ImGui::Spacing();
 
     //------------------------------------------------------------- Footer --//
