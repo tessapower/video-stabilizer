@@ -5,9 +5,15 @@
 #include "utils.h"
 
 #include <mutex>
+#include <unordered_map>
+#include <string>
+#include <functional>
 
 class logger {
   std::mutex mutex_;
+
+  // Dynamic logs
+  std::unordered_map<std::string, std::function<std::string()>> dynamic_logs_;
 
 protected:
   explicit logger();
@@ -33,6 +39,10 @@ public:
   auto add_log(const char* fmt, ...) -> void IM_FMTARGS(2);
 
   auto draw() -> void;
+  
+  auto add_dynamic_log(const std::string& id, std::function<std::string()> getter) -> void;
+
+  auto remove_dynamic_log(const std::string& id) -> void;
 };
 
 #endif  // LOGGER_H

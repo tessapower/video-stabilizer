@@ -26,6 +26,17 @@ auto logger::add_log(const char* fmt, ...) -> void IM_FMTARGS(2) {
     if (buf_[old_size] == '\n') line_offsets_.push_back(old_size + 1);
 }
 
+auto logger::add_dynamic_log(const std::string& id,
+                          std::function<std::string()> getter) -> void {
+  std::lock_guard lock(mutex_);
+  dynamic_logs_[id] = std::move(getter);
+}
+
+auto logger::remove_dynamic_log(const std::string& id) -> void {
+  std::lock_guard lock(mutex_);
+  dynamic_logs_.erase(id);
+}
+
 auto logger::draw() -> void IM_FMTARGS(2) {
   std::lock_guard lock(mutex_);
 
@@ -59,6 +70,11 @@ auto logger::draw() -> void IM_FMTARGS(2) {
     ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(4, 1));
 
     ImGui::TextUnformatted(buf_.begin(), buf_.end());
+
+    // Draw dynamic log entries
+    for (const auto& [id, getter] : dynamic_logs_) {
+      ImGui::TextUnformatted(getter().c_str());
+    }
   }
   ImGui::PopStyleVar();
 
