@@ -24,17 +24,25 @@ static model mod;
 
 static std::thread worker;
 
+inline auto loading_char() -> std::string {
+  return std::string{"|/-\\"[(int)(ImGui::GetTime() / 0.05f) & 3]};
+}
+
 inline auto state_changed(const state old_state, const state new_state)
     -> void {
   switch (old_state) {
     case state::waiting: {
       switch (new_state) {
         case state::loading: {
-          logger::instance()->add_log("Loading video...\n");
+          logger::instance()->add_dynamic_log("Loading", []() -> std::string {
+            return "Loading " + loading_char() + "\n";
+          });
           break;
         }
         case state::stabilizing: {
-          logger::instance()->add_log("Stabilizing video...\n");
+          logger::instance()->add_dynamic_log("Stabilizing", []() -> std::string {
+            return "Stabilizing " + loading_char() + "\n";
+          });
           break;
         }
         case state::saving: {
@@ -51,6 +59,7 @@ inline auto state_changed(const state old_state, const state new_state)
       if (new_state != state::waiting) {
         // Some kind of error!
       }
+      logger::instance()->remove_dynamic_log("Loading");
       logger::instance()->add_log(
           "%s\n", (mod.did_load() ? "Video loaded!"
                                   : "Error: video could not be loaded :("));
@@ -60,6 +69,7 @@ inline auto state_changed(const state old_state, const state new_state)
       if (new_state != state::waiting) {
         // Some kind of error!
       }
+      logger::instance()->remove_dynamic_log("Stabilizing");
       logger::instance()->add_log(
           "%s\n",
           (mod.is_stabilized() ? "Video stabilized!"
