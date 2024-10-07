@@ -146,24 +146,6 @@ void main() {
     while (!glfwWindowShouldClose(app::window)) {
       glfwPollEvents();
 
-      switch (app::mod.state()) {
-        // TODO: add support for measuring progress and split these cases
-        case app::state::loading:
-        case app::state::stabilizing: {
-          // Get progress
-          log::instance()->add_log(
-              "Loading %c\n",
-              "|/-\\"[static_cast<int>(ImGui::GetTime() / 0.05f) & 3]);
-          // Update log
-          break;
-        }
-        case app::state::saving:
-        case app::state::waiting: {
-          // Do nothing
-          break;
-        }
-      }
-
       gui::render();
 
       // Swap the front and back buffers
