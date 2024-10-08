@@ -42,7 +42,7 @@ auto stabilizer::crop_frames() noexcept -> void {
   }
 
   // Convert mask to square shape by using the smallest of the dimensions
-  const auto min_dim = min(mask.rows, mask.cols);
+  const auto min_dim = std::min(mask.rows, mask.cols);
   mask = mask(cv::Rect(0, 0, min_dim, min_dim));
 
   // Find the largest inscribed square of all the stabilized frames, starting
@@ -64,7 +64,7 @@ auto stabilizer::crop_frames() noexcept -> void {
       // Otherwise, calculate the value of this cell by following the formula:
       // S[x, y] = min(S[x + 1, y], S[x, y + 1], S[x + 1, y + 1]) + 1
       s.at<int>(row, col) =
-          min(s.at<int>(row + 1, col), min(s.at<int>(row, col + 1),
+          std::min(s.at<int>(row + 1, col), std::min(s.at<int>(row, col + 1),
                     s.at<int>(row + 1, col + 1))) + 1;
     }
   }
