@@ -405,3 +405,6 @@ FodyWeavers.xsd
 
 # VCPKG install directory
 /vcpkg_installed
+
+# Ignore tmp directory and files
+tmp/
