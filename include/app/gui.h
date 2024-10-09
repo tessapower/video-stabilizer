@@ -101,7 +101,7 @@ inline auto render(GLFWwindow* window) -> void {
       std::string path;
       if (utils::get_save_directory(path)) {
         if (app::video.export_to_file(path)) {
-          app::logger.add_log("Saving video...");
+          app::logger.add_log("Saving video...\n");
           app::logger.add_log("Video saved successfully!\n");
 
           video_loaded = false;
