@@ -7,7 +7,7 @@
 #include "utils.h"
 
 namespace gui {
-  // TODO: convert to singleton.
+// TODO: convert to singleton.
 struct log {
   ImGuiTextBuffer buf;
   // Index to lines offset. We maintain this with add_log() calls.

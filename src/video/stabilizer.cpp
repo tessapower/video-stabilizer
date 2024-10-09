@@ -9,7 +9,7 @@
 
 namespace vid {
 //----------------------------------------------------------------- Public --//
-auto video_stabilizer::stabilize() noexcept -> void {
+auto stabilizer::stabilize() noexcept -> void {
   // Generate the H matrices for all frame pairs
   std::cout << "Generating H matrices...\n";
   generate_h_mats();
@@ -31,7 +31,7 @@ auto video_stabilizer::stabilize() noexcept -> void {
   stabilize_frames();
 }
 
-auto video_stabilizer::crop_frames() noexcept -> void {
+auto stabilizer::crop_frames() noexcept -> void {
   // If there are no stabilized frames, don't do anything.
   if (stabilized_frames_.empty()) return;
 
@@ -99,12 +99,11 @@ auto video_stabilizer::crop_frames() noexcept -> void {
   for (auto& frame : stabilized_frames_) frame = frame(scaled_square);
 }
 
-auto video_stabilizer::stabilized_frames() const noexcept
-    -> std::vector<cv::Mat> {
+auto stabilizer::stabilized_frames() const noexcept -> std::vector<cv::Mat> {
   return stabilized_frames_;
 }
 
-auto video_stabilizer::generate_h_mats() noexcept -> void {
+auto stabilizer::generate_h_mats() noexcept -> void {
   // Clear any existing homography matrices
   h_mats_.clear();
   // Ensure the vector has enough space for (frames + 1) matrices
@@ -128,7 +127,7 @@ auto video_stabilizer::generate_h_mats() noexcept -> void {
 
 //---------------------------------------------------------------- Private --//
 
-auto video_stabilizer::compute_h_tilde() noexcept -> void {
+auto stabilizer::compute_h_tilde() noexcept -> void {
   h_tilde_.clear();
 
   // The first transformation matrix is always the identity matrix, which is
@@ -142,7 +141,7 @@ auto video_stabilizer::compute_h_tilde() noexcept -> void {
   }
 }
 
-auto video_stabilizer::compute_h_tilde_prime() noexcept -> void {
+auto stabilizer::compute_h_tilde_prime() noexcept -> void {
   h_tilde_prime_.clear();
 
   const auto size = static_cast<int>(h_tilde_.size());
@@ -165,7 +164,7 @@ auto video_stabilizer::compute_h_tilde_prime() noexcept -> void {
   }
 }
 
-auto video_stabilizer::compute_update_transforms() noexcept -> void {
+auto stabilizer::compute_update_transforms() noexcept -> void {
   update_transforms_.clear();
   // Ensure the update_transforms vector has enough
   // space for the number of frames
@@ -177,7 +176,7 @@ auto video_stabilizer::compute_update_transforms() noexcept -> void {
   }
 }
 
-auto video_stabilizer::stabilize_frames() noexcept -> void {
+auto stabilizer::stabilize_frames() noexcept -> void {
   stabilized_frames_.clear();
 
   const auto size = static_cast<int>(frames_.size());
