@@ -1,2 +1,23 @@
-# video-stabilizer
-An OpenCV project completed for the final assignment of the CGRA352 Image-Based Computer Graphics course at VUW.
+# Video Stabilizer
+
+TODO: add CI badges
+
+TODO: Write a project description
+
+TODO: Add screenshots
+
+# Installation
+
+## Prerequisites
+
+- vcpkg
+- cmake
+- git
+
+# Usage
+
+TODO: Write usage instructions
+
+# Contributing
+
+TODO: Write contributing instructions
