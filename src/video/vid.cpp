@@ -123,9 +123,8 @@ auto video::export_to_file(std::string const& save_dir) const noexcept -> bool {
     return false;
   }
 
-  // TODO: convert to log
+  // TODO: convert to log statements
   std::cout << "Using " << writer.getBackendName() << " to write new file.\n";
-
   std::cout << stabilized_frames.size() << " frames to write\n";
 
   for (auto const& frame : stabilized_frames) {
