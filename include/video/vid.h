@@ -2,7 +2,6 @@
 #define VIDEO_H
 
 #include <opencv2/core/mat.hpp>
-#include <opencv2/videoio.hpp>
 
 #include "stabilizer.h"
 
@@ -25,8 +24,6 @@ class video {
    */
   [[nodiscard]] auto export_to_file(std::string const& save_dir) const noexcept
       -> bool;
-
-  [[nodiscard]] auto n_frames() const noexcept -> size_t;
 
   [[nodiscard]] auto empty() const noexcept -> bool {
     return original_frames_.empty();

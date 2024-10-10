@@ -1,10 +1,9 @@
 #include "video/stabilizer.h"
 
-#include <opencv2/imgproc/imgproc_c.h>
-
+#include <algorithm>
 #include <iostream>
+#include <opencv2/imgproc/imgproc_c.h>
 #include <opencv2/calib3d.hpp>
-#include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
 
 namespace vid {
