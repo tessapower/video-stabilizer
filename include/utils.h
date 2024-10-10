@@ -40,16 +40,14 @@ inline auto get_video_path(GLFWwindow* window, std::string& path) -> bool {
 
   switch (result) {
     case NFD_OKAY: {
-      std::cout << "Success!\n";
       path = std::string{out_path};
       NFD_FreePathU8(out_path);
+
       return true;
     }
-    case NFD_CANCEL: {
-      std::cout << "User pressed cancel.\n";
-      return false;
-    }
+    case NFD_CANCEL: return false;
     case NFD_ERROR: {
+      // TODO: convert to debug log
       std::cerr << "Error: " << NFD_GetError() << '\n';
       return false;
     }
@@ -60,22 +58,17 @@ inline auto get_video_path(GLFWwindow* window, std::string& path) -> bool {
 
 inline auto get_save_directory(std::string& out_dir) -> bool {
   nfdchar_t* dir = nullptr;
-  nfdresult_t result = NFD_PickFolderU8(&dir, nullptr);
 
-  switch (result) {
+  switch (NFD_PickFolderU8(&dir, nullptr)) {
     case NFD_OKAY: {
-      std::cout << "Success!\n";
       out_dir = dir;
       NFD_FreePathU8(dir);
 
       return true;
     }
-    case NFD_CANCEL: {
-      std::cout << "User pressed cancel.\n";
-
-      return false;
-    }
+    case NFD_CANCEL: return false;
     case NFD_ERROR: {
+      // TODO: convert to debug log
       std::cerr << "Error: " << NFD_GetError() << '\n';
 
       return false;

@@ -93,6 +93,7 @@ inline auto debug_cb(const GLenum source, const GLenum type, const GLuint id,
   // nvidia: avoid debug spam about attribute offsets
   if (id == 131076) return;
 
+  // TODO: convert to debug logs
   std::cerr << "GL [" << source_string(source) << "] " << type_string(type)
             << ' ' << id << " : ";
   std::cerr << message << " (Severity: " << severity_string(severity) << ")\n";

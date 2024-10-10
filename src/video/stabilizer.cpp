@@ -11,23 +11,18 @@ namespace vid {
 //----------------------------------------------------------------- Public --//
 auto stabilizer::stabilize() noexcept -> void {
   // Generate the H matrices for all frame pairs
-  std::cout << "Generating H matrices...\n";
   generate_h_mats();
 
   // Calculate the cumulative transformation matrices
-  std::cout << "Calculating cumulative transformations...\n";
   compute_h_tilde();
 
   // Smooth out the cumulative transformation matrices
-  std::cout << "Applying smoothing filter...\n";
   compute_h_tilde_prime();
 
   // Calculate the update transformation matrices
-  std::cout << "Computing smoothed transformations...\n";
   compute_update_transforms();
 
   // Apply the corresponding update transformation matrices to each frame
-  std::cout << "Applying smoothed transformations to frames...\n";
   stabilize_frames();
 }
 
