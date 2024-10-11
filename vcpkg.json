@@ -31,7 +31,7 @@
     },
     {
       "name": "opencv4",
-      "features": [ "ffmpeg" ],
+      "features": [ "ffmpeg", "jpeg", "opengl", "png", "tiff", "webp" ],
       "version>=": "4.8.0#22"
     },
     {
