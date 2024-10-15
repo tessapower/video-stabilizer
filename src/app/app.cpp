@@ -39,7 +39,13 @@
 #include "app/gui.h"
 #include "app/shader.h"
 
+#ifdef WIN32
+auto APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int) -> int {
+#endif
+
+#ifndef WIN32
 auto main() -> int {
+#endif
   //----------------------------------------------- Initialize GLFW system --//
   // TODO: Create error codes to handle initialization errors
   if (!app::init_glfw()) {
