@@ -100,6 +100,5 @@ include_directories(
 #########################################################
 
 add_subdirectory(src)
-add_subdirectory(shaders)
 
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT app)
