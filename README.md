@@ -15,22 +15,21 @@ An application of Lowe's Scale-Invariant Feature Transform (SIFT)[^1] feature de
 |:--------:|:----------:|
 | ![Original Video](./docs/original.gif) | ![Stabilized Video](./docs/stabilized.gif) |
 
-## Usage
+## How Does it Work?
 
-The program should be very straight forward to use. Follow the steps below to stabilize a video:
+When stabilizing a video, the goal is to remove unwanted camera motion (e.g. shaking or jittering) while preserving the intended motion (e.g. panning or zooming). The algorithm can be broken down in to these steps:
 
-- Start by clicking the `Import Video` button to select a video. Supported formats are `.MOV` ,`.MP4` or `.MPEG4`, `.WMV`, `.AVI`, and .`.FLV`.
-- Once selected, the program will load your video.
-- Click the `Stabilize` button. The program will begin stabilizing your video.
-- When the video is finished, you'll see a message displayed in the log area.
-- Click the `Save` button to select the folder where your stabilized video will be saved. The stabilized video will be saved as a new file with a different name.
+1. **Detect Key Points:** key points are detected in each video frame using feature detection techniques like SIFT, SURF, or ORB (in this project, we use SIFT). These are distinct points in the frame, like corners or edges, that are easy to track across frames.
 
 TODO: Add screenshots/gifs
 
-## Limitations
+2. **Match Key Points Across Frames:** The key points from one frame are matched to the corresponding points in the next frame. This matching allows us to estimate how the frame has shifted, rotated, or transformed.
 
-- Currently only supports being run on Windows.
-- Output videos are in MP4 format.
+3. **Estimate the Homography Matrix:** Using the matched key points and the RANSAC algorithm, a homography matrix (shortened to "H matrix") is computed for every pair of consecutive frames to model the transformation between them. This estimated transform matrix includes translations (i.e. how the camera moved), rotations (i.e. how the frame tilted), and other distortions like perspective shifts.
+4. **Stabilization:** To stabilize the video, the calculated H matrix is applied to every pair of frames to correct the unwanted motion. If a frame shifted slightly, e.g. due to hand tremors, applying the h matrix would shift the frame back into alignment, as well as correcting rotation or perspective distortions.
+5. **Apply Smoothing:** The calculated homographies can then be smoothed out over several frames to ensure the stabilization is gradual and not abrupt. This prevents a "jumping" effect in the video, leading to smoother output.
+6. **Cropping**: During stabilization, the algorithm attempts to counteract shaky movements by shifting the frames accordingly. These shifts can create gaps or borders (show below in green) around the edges of the video. To avoid showing these unwanted borders, stabilized videos are slightly cropped—a small trade-off to hide the artifacts introduced.
+
 
 ## Building
 
