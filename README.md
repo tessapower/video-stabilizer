@@ -36,16 +36,6 @@ When stabilizing a video, our goal is to remove unwanted camera motion (e.g. sha
 |:---------------:|:--------------:|
 | ![Stabilized Video, No Crop](./docs/stabilized-no-crop.gif) | ![Stabilized Video](./docs/stabilized.gif) |
 
-## Building
-
-### Prerequisites
-
-To build this project, please ensure that your system has the following software already installed:
-
-- [vcpkg](https://vcpkg.io/)
-- [CMake](https://cmake.org/)
-- [git](https://git-scm.com/)
-
 ## Future Improvements
 
 - [ ] Loading and progress status indicators
