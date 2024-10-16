@@ -2,9 +2,12 @@
 
 TODO: add CI badges
 
-A small and simple program that utilizes computer vision algorithms to stabilize shaky videos by detecting motion and compensating for unwanted movements.
+An application of Lowe's Scale-Invariant Feature Transform (SIFT)[^1] feature detection and Fischler and Bolles' RAndom SAmple Consesus (RANSAC)[^2] algorithm to compute robust estimate homography matrices to stabilize a video on a frame-by-frame basis.
 
-## How Does it Work?
+[^1]: Lowe, David G. "Distinctive image features from scale-invariant keypoints." _International Journal of Computer Vision_, vol. 60, no. 2, 2004, pp. 91-110. [https://doi.org/10.1023/B:VISI.0000029664.99615.94](https://doi.org/10.1023/B:VISI.0000029664.99615.94)
+
+[^2]: Fischler, Martin A., and Robert C. Bolles. "Random sample consensus: A paradigm for model fitting with applications to image analysis and automated cartography." _Communications of the ACM_, vol. 24, no. 6, 1981, pp. 381-395. [https://doi.org/10.1145/358669.358692](https://doi.org/10.1145/358669.358692).
+
 
 By tracking key features across frames, estimating the camera's motion path, and applying smoothing techniques to reduce jitter. The stabilized output retains the original video's quality while creating a smoother viewing experience, which is ideal for correcting handheld footage or dynamic environments.
 
