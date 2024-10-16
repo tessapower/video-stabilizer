@@ -9,13 +9,13 @@ An application of Lowe's **S**cale-**I**nvariant **F**eature **T**ransform (SIFT
 [^2]: Fischler, Martin A., and Robert C. Bolles. "Random sample consensus: A paradigm for model fitting with applications to image analysis and automated cartography." _Communications of the ACM_, vol. 24, no. 6, 1981, pp. 381-395. [https://doi.org/10.1145/358669.358692](https://doi.org/10.1145/358669.358692).
 
 
-## Example
+### Example
 
 | Original | Stabilized |
 |:--------:|:----------:|
 | ![Original Video](./docs/original.gif) | ![Stabilized Video](./docs/stabilized.gif) |
 
-## How Does it Work?
+### How Does it Work?
 
 When stabilizing a video, our goal is to remove unwanted camera motion (e.g. shaking or jittering) while preserving the intended motion (e.g. panning or zooming). The algorithm can be broken down in to these steps:
 
@@ -36,7 +36,7 @@ When stabilizing a video, our goal is to remove unwanted camera motion (e.g. sha
 |:---------------:|:--------------:|
 | ![Stabilized Video, No Crop](./docs/stabilized-no-crop.gif) | ![Stabilized Video](./docs/stabilized.gif) |
 
-## Future Improvements
+### Future Improvements
 
 - [ ] Loading and progress status indicators
 - [ ] Preview of original video
@@ -50,6 +50,6 @@ When stabilizing a video, our goal is to remove unwanted camera motion (e.g. sha
 - [ ] Support running on MacOS and mainstream Linux distros
 - [ ] Set up a vcpkg binary cache using [GitHub Actions Cache](https://learn.microsoft.com/en-us/vcpkg/consume/binary-caching-github-actions-cache)
 
-## Attributions
+### Attributions
 
 The user interface was created using [ImGui](https://github.com/ocornut/imgui), and the stabilization algorithm was implemented using the [OpenCV library](https://opencv.org/).
