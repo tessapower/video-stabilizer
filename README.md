@@ -38,7 +38,7 @@ When stabilizing a video, our goal is to remove unwanted camera motion (e.g. sha
 
 ### Future Improvements
 
-- [ ] Loading and progress status indicators
+- [x] Loading and progress status indicators
 - [ ] Preview of original video
 - [ ] Preview of stabilized video
 - [ ] Run stabilization in dedicated thread
