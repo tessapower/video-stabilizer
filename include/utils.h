@@ -75,6 +75,11 @@ inline auto get_save_directory(std::string& out_dir) -> bool {
 
   return false;
 }
+
+static auto loading_dots() -> std::string {
+  const int n_dots = static_cast<int>(ImGui::GetTime() / 0.3f) & 3;
+  return std::string{"..."}.substr(0, n_dots);
+}
 }  // namespace utils
 
 #endif  // UTILS_H

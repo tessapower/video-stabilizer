@@ -40,9 +40,10 @@ inline auto state_changed(const state old_state, const state new_state)
           break;
         }
         case state::stabilizing: {
-          logger::instance()->add_dynamic_log("Stabilizing", []() -> std::string {
-            return "Stabilizing " + loading_char() + "\n";
-          });
+          logger::instance()->add_dynamic_log(
+              "Stabilizing", []() -> std::string {
+                return "Stabilizing " + loading_char() + "\n";
+              });
           break;
         }
         case state::saving: {
