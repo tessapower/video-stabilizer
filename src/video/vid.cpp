@@ -8,6 +8,7 @@
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/videoio.hpp>
 
+#include "logger/logger.h"
 #include "video/stabilizer.h"
 
 namespace vid {
@@ -38,6 +39,10 @@ auto video::load_frames(
   // Clear out old data
   original_frames_.clear();
 
+  logger::instance()->add_dynamic_log("load-frames", [&]() -> std::string {
+    return std::string("Loading frames") + utils::loading_dots() + "\n";
+  });
+
   for (const auto& path : frames_file_paths) {
     cv::Mat frame = cv::imread(path);
     if (frame.empty()) {
@@ -48,6 +53,8 @@ auto video::load_frames(
 
     original_frames_.push_back(frame);
   }
+
+  logger::instance()->remove_dynamic_log("load-frames");
 }
 
 auto video::padded_string(const int n, const int frame_count) noexcept
@@ -97,12 +104,20 @@ auto video::load_video_from_file(std::string const& video_file_path) noexcept
 
   // Extract the frames from the video into the tmp directory
   cv::Mat frame;
+
+  // Add dynamic log to track progress of video load
+  logger::instance()->add_dynamic_log("progress", [&]() -> std::string {
+    return std::string("Processing video") + utils::loading_dots() + "\n";
+  });
+
   auto i = 0;
   while (video.read(frame)) {
     const auto file_name = std::string{
-        ".//tmp//frame_" + padded_string(i++, frame_count) + ".png"};
+        ".//tmp//frame_" + padded_string(i++, frame_count_) + ".png"};
     cv::imwrite(file_name, frame);
   }
+
+  logger::instance()->remove_dynamic_log("progress");
 
   // Read all the frames in the tmp folder into frames vector
   std::vector<cv::String> image_paths;
