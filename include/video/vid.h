@@ -36,11 +36,20 @@ class video {
     return original_frames_.empty();
   }
 
+  [[nodiscard]] auto fps() const noexcept -> int { return fps_; }
+
+  [[nodiscard]] auto fourcc() const noexcept -> int { return fourcc_; }
+
+  [[nodiscard]] auto bitrate() const noexcept -> double { return bitrate_; }
+
  private:
   std::vector<cv::Mat> original_frames_{};
   vid::stabilizer stabilizer_{};
-  int fps_ = 0;
+  double bitrate_ = 0;
   int fourcc_ = 0;
+  int fps_ = 0;
+  int frame_count_ = 0;
+  cv::Size size_;
 
   auto load_frames(std::vector<std::string> const& frames_file_paths) noexcept
       -> void;

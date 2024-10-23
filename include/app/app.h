@@ -61,9 +61,26 @@ inline auto state_changed(const state old_state, const state new_state)
         // Some kind of error!
       }
       logger::instance()->remove_dynamic_log("Loading");
-      logger::instance()->add_log(
-          "%s\n", (mod.did_load() ? "Video loaded!"
-                                  : "Error: video could not be loaded :("));
+      if (mod.did_load()) {
+        logger::instance()->add_log("Video loaded!\n");
+        logger::instance()->add_log("File path: \"%s\"\n",
+                                    mod.video_path.c_str());
+
+        logger::instance()->add_log("  - FPS: %i\n", mod.video->fps());
+
+        const auto fourcc = mod.video->fourcc();
+        // Transform from int to char via Bitwise operators
+        char encoding[] = {static_cast<char>(fourcc & 0XFF),
+                           static_cast<char>((fourcc & 0XFF00) >> 8),
+                           static_cast<char>((fourcc & 0XFF0000) >> 16),
+                           static_cast<char>((fourcc & 0XFF000000) >> 24), 0};
+        logger::instance()->add_log("  - CODEC: %s\n", encoding);
+        logger::instance()->add_log("  - Bitrate: %f kbits/sec\n",
+                                    mod.video->bitrate());
+      } else {
+        logger::instance()->add_log("Error: video could not be loaded :(");
+      }
+
       break;
     }
     case state::stabilizing: {

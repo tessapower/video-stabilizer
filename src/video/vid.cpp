@@ -18,13 +18,14 @@ video::video() {
   fps_ = 0;
   fourcc_ = 0;
 }
-  
+
 video& video::operator=(video const& other) noexcept {
   if (this != &other) {
     original_frames_ = other.original_frames_;
     stabilizer_ = other.stabilizer_;
     fps_ = other.fps_;
     fourcc_ = other.fourcc_;
+    size_ = other.size_;
   }
 
   return *this;
@@ -87,15 +88,17 @@ auto video::load_video_from_file(std::string const& video_file_path) noexcept
     return;
   }
 
-  fps_ = static_cast<int>(video.get(cv::CAP_PROP_FPS));
+  bitrate_ = video.get(cv::CAP_PROP_BITRATE);
   fourcc_ = static_cast<int>(video.get(cv::CAP_PROP_FOURCC));
+  fps_ = static_cast<int>(video.get(cv::CAP_PROP_FPS));
+  frame_count_ = static_cast<int>(video.get(cv::CAP_PROP_FRAME_COUNT));
+  size_ = cv::Size(static_cast<int>(video.get(cv::CAP_PROP_FRAME_WIDTH)),
+                   static_cast<int>(video.get(cv::CAP_PROP_FRAME_HEIGHT)));
 
   // TODO: convert to debug log
   std::cout << "Opened video file: " << video_file_path << "\n";
   std::cout << "FPS: " << fps_ << "\n";
-  const auto frame_count =
-      static_cast<int>(video.get(cv::CAP_PROP_FRAME_COUNT));
-  std::cout << "Frame Count: " << frame_count << "\n";
+  std::cout << "Frame Count: " << frame_count_ << "\n";
 
   // Create a tmp directory to store the frames
   if (!std::filesystem::exists(".//tmp")) {
