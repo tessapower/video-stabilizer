@@ -58,6 +58,7 @@ inline auto state_changed(const state old_state, const state new_state)
     }
     case state::loading: {
       if (new_state != state::waiting) {
+        // TODO: introduce custom error
         // Some kind of error!
       }
       logger::instance()->remove_dynamic_log("Loading");

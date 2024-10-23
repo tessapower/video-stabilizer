@@ -73,8 +73,6 @@ inline auto render() -> void {
     if (ImGui::Button("Save")) app::on_save_clicked();
     ImGui::EndDisabled();
 
-    // TODO: Add stats like the file name, frame rate, resolution, etc.
-
     ImGui::Spacing();
 
     //------------------------------------------------------ Logger window --//
