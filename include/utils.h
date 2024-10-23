@@ -46,7 +46,7 @@ inline auto get_video_path(GLFWwindow* window, std::string& path) -> bool {
     case NFD_CANCEL: return false;
     case NFD_ERROR: {
       // TODO: convert to debug log
-      std::cerr << "Error: " << NFD_GetError() << '\n';
+      std::cerr << "Error: " << NFD_GetError() << "\n";
       return false;
     }
   }
@@ -67,7 +67,7 @@ inline auto get_save_directory(std::string& out_dir) -> bool {
     case NFD_CANCEL: return false;
     case NFD_ERROR: {
       // TODO: convert to debug log
-      std::cerr << "Error: " << NFD_GetError() << '\n';
+      std::cerr << "Error: " << NFD_GetError() << "\n";
 
       return false;
     }

@@ -2,7 +2,6 @@
 #define VIDEO_STABILIZER_H
 
 #include <opencv2/core/mat.hpp>
-#include <opencv2/features2d.hpp>
 #include <opencv2/highgui.hpp>
 
 #include "image/feature_tracker.h"

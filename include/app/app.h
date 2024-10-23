@@ -11,8 +11,8 @@
 
 #include <iostream>
 
-#include "model.h"
 #include "logger/logger.h"
+#include "model.h"
 
 namespace app {
 static constexpr int window_width = 500;
@@ -25,7 +25,7 @@ static model mod;
 static std::thread worker;
 
 inline auto loading_char() -> std::string {
-  return std::string{"|/-\\"[(int)(ImGui::GetTime() / 0.05f) & 3]};
+  return std::string{"|/-\\"[static_cast<int>(ImGui::GetTime() / 0.05f) & 3]};
 }
 
 inline auto state_changed(const state old_state, const state new_state)

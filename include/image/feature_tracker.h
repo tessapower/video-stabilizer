@@ -39,7 +39,7 @@ class feature_tracker {
    * their matching feature points. Assumes that <code>track()</code> has
    * already been called.
    */
-  auto warp_image() const noexcept -> cv::Mat;
+  [[nodiscard]] auto warp_image() const noexcept -> cv::Mat;
 
   /**
    * \brief Returns the Hessian matrix that transforms the points in the

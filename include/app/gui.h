@@ -58,23 +58,19 @@ inline auto render() -> void {
     //----------------------------------------------------- Action Buttons --//
     // Disable the import button if we are busying loading or stabilizing a video
     ImGui::BeginDisabled(app::mod.state() != app::state::waiting);
-    if (ImGui::Button("Import Video")) {
-      app::on_load_clicked();
-    }
+    if (ImGui::Button("Import Video")) app::on_load_clicked();
     ImGui::EndDisabled();
     ImGui::SameLine();
 
-    ImGui::BeginDisabled(!app::mod.did_load() || app::mod.state() == app::state::stabilizing || app::mod.is_stabilized());
-    if (ImGui::Button("Stabilize")) {
-      app::on_stabilize_clicked();
-    }
+    ImGui::BeginDisabled(!app::mod.did_load() 
+      || app::mod.state() == app::state::stabilizing 
+      || app::mod.is_stabilized());
+    if (ImGui::Button("Stabilize")) app::on_stabilize_clicked();
     ImGui::EndDisabled();
     ImGui::SameLine();
 
     ImGui::BeginDisabled(!app::mod.is_stabilized());
-    if (ImGui::Button("Save")) {
-      app::on_save_clicked();
-    }
+    if (ImGui::Button("Save")) app::on_save_clicked();
     ImGui::EndDisabled();
 
     // TODO: Add stats like the file name, frame rate, resolution, etc.
