@@ -132,21 +132,6 @@ auto video::load_video_from_file(std::string const& video_file_path) noexcept
   std::filesystem::remove_all(".//tmp//");
 }
 
-auto video::stabilize() noexcept -> bool {
-  // Pass frames to stabilizer and do the work
-  stabilizer_.frames(original_frames_);
-  // TODO: report progress to out var?
-  stabilizer_.stabilize();
-  stabilizer_.crop_frames();
-
-  if (stabilizer_.stabilized_frames().empty()) {
-    // TODO: convert to debug log
-    std::cerr << "Error: could not stabilize video\n";
-
-    return false;
-  }
-
-  return true;
 }
 
 auto video::export_to_file(std::string const& save_dir) const noexcept -> bool {

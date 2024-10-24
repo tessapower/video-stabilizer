@@ -3,8 +3,6 @@
 
 #include <opencv2/core/mat.hpp>
 
-#include "stabilizer.h"
-
 namespace vid {
 class video {
  public:
@@ -21,10 +19,6 @@ class video {
   auto load_video_from_file(std::string const& video_file_path) noexcept
       -> void;
 
-  /**
-   * @brief Stabilizes the video.
-   */
-  auto stabilize() noexcept -> bool;
 
   /**
    * @brief Exports the stabilized video to the given file path.
@@ -44,7 +38,6 @@ class video {
 
  private:
   std::vector<cv::Mat> original_frames_{};
-  vid::stabilizer stabilizer_{};
   double bitrate_ = 0;
   int fourcc_ = 0;
   int fps_ = 0;
