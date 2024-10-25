@@ -12,6 +12,7 @@
 #include <iostream>
 
 #include "logger/logger.h"
+#include "video/stabilizer.h"
 #include "model.h"
 
 namespace app {
@@ -23,6 +24,8 @@ static GLFWwindow *window;
 static model mod;
 
 static std::thread worker;
+
+static vid::stabilizer stabilizer;
 
 inline auto loading_char() -> std::string {
   return std::string{"|/-\\"[static_cast<int>(ImGui::GetTime() / 0.05f) & 3]};
