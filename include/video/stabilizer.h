@@ -2,8 +2,8 @@
 #define VIDEO_STABILIZER_H
 
 #include <opencv2/core/mat.hpp>
-#include <opencv2/highgui.hpp>
 
+#include "vid.h"
 #include "image/feature_tracker.h"
 
 namespace vid {
@@ -11,26 +11,10 @@ class stabilizer {
  public:
   explicit stabilizer() = default;
 
-  explicit stabilizer(std::vector<cv::Mat> const& frames) : frames_{frames} {}
-
-  auto frames(std::vector<cv::Mat> const& f) { frames_ = f; }
-
   /**
-   * Stabilizes the video frames.
+   * @brief Stabilizes the video frames.
    */
-  auto stabilize() noexcept -> void;
-
-  /**
-   * \brief Crops the stabilized frames to remove borders. Assumes that
-   * <code>stabilize()</code> has been called.
-   */
-  auto crop_frames() noexcept -> void;
-
-  /**
-   * Returns the stabilized frames, assumes that <code>stabilize()</code> has
-   * been called.
-   */
-  [[nodiscard]] auto stabilized_frames() const noexcept -> std::vector<cv::Mat>;
+  auto stabilize(video const* in, video* out) noexcept -> bool;
 
  private:
   // Original and stabilized frames
@@ -50,29 +34,35 @@ class stabilizer {
   std::vector<cv::Mat> update_transforms_;
 
   /**
-   * \brief Generates the homography matrices for all frame pairs.
+   * @brief Generates the homography matrices for all frame pairs.
    */
   auto generate_h_mats() noexcept -> void;
 
   /**
-   * \brief Computes the cumulative transformation matrices.
+   * @brief Computes the cumulative transformation matrices.
    */
   auto compute_h_tilde() noexcept -> void;
 
   /**
-   * \brief Computes the smoothed out the cumulative transformation matrices.
+   * @brief Computes the smoothed out the cumulative transformation matrices.
    */
   auto compute_h_tilde_prime() noexcept -> void;
 
   /**
-   * \brief Computes the update transformation matrices.
+   * @brief Computes the update transformation matrices.
    */
   auto compute_update_transforms() noexcept -> void;
 
   /**
-   * \brief Stabilizes the frames using the update transformation matrices.
+   * @brief Stabilizes the frames using the update transformation matrices.
    */
   auto stabilize_frames() noexcept -> void;
+
+  /**
+   * @brief Crops the stabilized frames to remove borders. Assumes that
+   * <code>stabilize()</code> has been called.
+   */
+  auto crop_frames() noexcept -> void;
 };
 }  // namespace vid
 

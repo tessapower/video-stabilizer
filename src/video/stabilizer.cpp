@@ -8,7 +8,17 @@
 
 namespace vid {
 //----------------------------------------------------------------- Public --//
-auto stabilizer::stabilize() noexcept -> void {
+auto stabilizer::stabilize(video const* in, video* out) noexcept -> bool {
+  *out = in->clone();
+
+  // No video or frames to stabilize
+  if (out->empty()) return false;
+
+  // TODO: check at each stage if the expected output was generated, return false if no
+
+  // Create copy of video
+  frames_ = out->frames();
+
   // Generate the H matrices for all frame pairs
   generate_h_mats();
 
@@ -23,8 +33,138 @@ auto stabilizer::stabilize() noexcept -> void {
 
   // Apply the corresponding update transformation matrices to each frame
   stabilize_frames();
+
+  // Crop the frames to remove introduced artefacts
+  crop_frames();
+
+  // Update out video object frames and size
+  out->frames(frames_);
+
+  return true;
+}
+  
+//---------------------------------------------------------------- Private --//
+auto stabilizer::generate_h_mats() noexcept -> void {
+  logger::instance()->add_dynamic_log("h-mats", []() -> std::string {
+    return std::string("Generating homography matrices") +
+           utils::loading_dots() + "\n";
+  });
+
+  // Clear any existing homography matrices
+  h_mats_.clear();
+  // Ensure the vector has enough space for (frames + 1) matrices
+  const auto size = static_cast<int>(frames_.size());
+  h_mats_.reserve(size);
+
+  // Add the identity matrix first
+  h_mats_.push_back(cv::Mat::eye(3, 3, CV_64FC1));
+
+  // Calculate the homography matrices for all frame pairs
+  for (auto i = 1; i < size; ++i) {
+    // Get the current and previous frames
+    const auto img_1 = frames_[i];
+    const auto img_2 = frames_[i - 1];
+
+    ft_.set_images(img_1, img_2);
+    ft_.track();
+    h_mats_.push_back(ft_.h_mat());
+  }
+
+  logger::instance()->remove_dynamic_log("h-mats");
 }
 
+auto stabilizer::compute_h_tilde() noexcept -> void {
+  logger::instance()->add_dynamic_log("h-tilde", []() -> std::string {
+    return std::string("Calculating cumulative transformation matrices") +
+           utils::loading_dots() + "\n";
+  });
+
+  h_tilde_.clear();
+
+  // The first transformation matrix is always the identity matrix, which is
+  // the first entry in the h_mats_ vector.
+  h_tilde_.push_back(h_mats_.front());
+
+  // Calculate the cumulative transformation matrices
+  const auto size = static_cast<int>(h_mats_.size());
+  for (auto i = 1; i < size; ++i) {
+    h_tilde_.push_back(h_tilde_[i - 1] * h_mats_[i]);
+  }
+
+  logger::instance()->remove_dynamic_log("h-tilde");
+}
+
+auto stabilizer::compute_h_tilde_prime() noexcept -> void {
+  logger::instance()->add_dynamic_log("h-tilde-prime", []() -> std::string {
+    return std::string("Applying filter to cumulative matrices") +
+           utils::loading_dots() + "\n";
+  });
+
+  h_tilde_prime_.clear();
+
+  const auto size = static_cast<int>(h_tilde_.size());
+  for (auto i = 0; i < size; ++i) {
+    double sum = 0.0;
+    cv::Mat h(3, 3, CV_64FC1, cv::Scalar(0.0));
+
+    // Apply the filter to each cumulative transformation matrix
+    const auto filter_size = static_cast<int>(weight_list_.size());
+    for (auto j = 0; j < filter_size; ++j) {
+      const auto idx = i + j - 2;
+      // If we're too close to the first or last frame, we can't use the
+      // filter
+      if (idx < 0 || idx >= size) continue;
+      h += h_tilde_[idx].mul(weight_list_[j]);
+      sum += weight_list_[j];
+    }
+
+    h_tilde_prime_.push_back(h.mul(1.0 / sum));
+  }
+
+  logger::instance()->remove_dynamic_log("h-tilde-prime");
+}
+
+auto stabilizer::compute_update_transforms() noexcept -> void {
+  logger::instance()->add_dynamic_log("update-transforms", []() -> std::string {
+    return std::string("Computing update transforms") + utils::loading_dots() +
+           "\n";
+  });
+
+  update_transforms_.clear();
+
+  // Ensure the update_transforms vector has enough
+  // space for the number of frames
+  const auto size = static_cast<int>(frames_.size());
+
+  for (auto i = 0; i < size; ++i) {
+    // U_i = H~'_i^-1 * H~_i
+    update_transforms_.push_back(h_tilde_prime_[i].inv() * h_tilde_[i]);
+  }
+
+  logger::instance()->remove_dynamic_log("update-transforms");
+}
+
+auto stabilizer::stabilize_frames() noexcept -> void {
+  logger::instance()->add_dynamic_log("stabilize-frames", []() -> std::string {
+    return std::string("Stabilizing frames") + utils::loading_dots() + "\n";
+  });
+
+  stabilized_frames_.clear();
+
+  const auto size = static_cast<int>(frames_.size());
+  stabilized_frames_.reserve(size);
+
+  for (auto i = 0; i < size; ++i) {
+    cv::Mat stabilized_frame;
+
+    cv::warpPerspective(frames_[i], stabilized_frame, update_transforms_[i],
+                        frames_[i].size(), 1, cv::BORDER_CONSTANT);
+    stabilized_frames_.push_back(stabilized_frame);
+  }
+
+  logger::instance()->remove_dynamic_log("stabilize-frames");
+}
+  
 auto stabilizer::crop_frames() noexcept -> void {
   // If there are no stabilized frames, don't do anything.
   if (stabilized_frames_.empty()) return;
@@ -94,130 +234,4 @@ auto stabilizer::crop_frames() noexcept -> void {
   for (auto& frame : stabilized_frames_) frame = frame(scaled_square);
 }
 
-auto stabilizer::stabilized_frames() const noexcept -> std::vector<cv::Mat> {
-  return stabilized_frames_;
-}
-
-auto stabilizer::generate_h_mats() noexcept -> void {
-  // Clear any existing homography matrices
-  h_mats_.clear();
-  // Ensure the vector has enough space for (frames + 1) matrices
-  const auto size = static_cast<int>(frames_.size());
-  h_mats_.reserve(size);
-
-  // Add the identity matrix first
-  h_mats_.push_back(cv::Mat::eye(3, 3, CV_64FC1));
-
-  logger::instance()->add_dynamic_log("h-mats", []() -> std::string {
-    return std::string("Generating homography matrices") +
-           utils::loading_dots() + "\n";
-  });
-
-  // Calculate the homography matrices for all frame pairs
-  for (auto i = 1; i < size; ++i) {
-    // Get the current and previous frames
-    const auto img_1 = frames_[i];
-    const auto img_2 = frames_[i - 1];
-
-    ft_.set_images(img_1, img_2);
-    ft_.track();
-    h_mats_.push_back(ft_.h_mat());
-  }
-
-  logger::instance()->remove_dynamic_log("h-mats");
-}
-
-//---------------------------------------------------------------- Private --//
-
-auto stabilizer::compute_h_tilde() noexcept -> void {
-  h_tilde_.clear();
-
-  // The first transformation matrix is always the identity matrix, which is
-  // the first entry in the h_mats_ vector.
-  h_tilde_.push_back(h_mats_.front());
-
-  logger::instance()->add_dynamic_log("h-tilde", []() -> std::string {
-    return std::string("Calculating cumulative transformation matrices") +
-           utils::loading_dots() + "\n";
-  });
-
-  // Calculate the cumulative transformation matrices
-  const auto size = static_cast<int>(h_mats_.size());
-  for (auto i = 1; i < size; ++i) {
-    h_tilde_.push_back(h_tilde_[i - 1] * h_mats_[i]);
-  }
-
-  logger::instance()->remove_dynamic_log("h-tilde");
-}
-
-auto stabilizer::compute_h_tilde_prime() noexcept -> void {
-  h_tilde_prime_.clear();
-
-  logger::instance()->add_dynamic_log("h-tilde-prime", []() -> std::string {
-    return std::string("Applying filter to cumulative matrices") +
-           utils::loading_dots() + "\n";
-  });
-
-  const auto size = static_cast<int>(h_tilde_.size());
-  for (auto i = 0; i < size; ++i) {
-    double sum = 0.0;
-    cv::Mat h(3, 3, CV_64FC1, cv::Scalar(0.0));
-
-    // Apply the filter to each cumulative transformation matrix
-    const auto filter_size = static_cast<int>(weight_list_.size());
-    for (auto j = 0; j < filter_size; ++j) {
-      const auto idx = i + j - 2;
-      // If we're too close to the first or last frame, we can't use the
-      // filter
-      if (idx < 0 || idx >= size) continue;
-      h += h_tilde_[idx].mul(weight_list_[j]);
-      sum += weight_list_[j];
-    }
-
-    h_tilde_prime_.push_back(h.mul(1.0 / sum));
-  }
-
-  logger::instance()->remove_dynamic_log("h-tilde-prime");
-}
-
-auto stabilizer::compute_update_transforms() noexcept -> void {
-  update_transforms_.clear();
-
-  logger::instance()->add_dynamic_log("update-transforms", []() -> std::string {
-    return std::string("Computing update transforms") + utils::loading_dots() +
-           "\n";
-  });
-
-  // Ensure the update_transforms vector has enough
-  // space for the number of frames
-  const auto size = static_cast<int>(frames_.size());
-
-  for (auto i = 0; i < size; ++i) {
-    // U_i = H~'_i^-1 * H~_i
-    update_transforms_.push_back(h_tilde_prime_[i].inv() * h_tilde_[i]);
-  }
-
-  logger::instance()->remove_dynamic_log("update-transforms");
-}
-
-auto stabilizer::stabilize_frames() noexcept -> void {
-  stabilized_frames_.clear();
-
-  logger::instance()->add_dynamic_log("stabilize-frames", []() -> std::string {
-    return std::string("Stabilizing frames") + utils::loading_dots() + "\n";
-  });
-
-  const auto size = static_cast<int>(frames_.size());
-  stabilized_frames_.reserve(size);
-
-  for (auto i = 0; i < size; ++i) {
-    cv::Mat stabilized_frame;
-
-    cv::warpPerspective(frames_[i], stabilized_frame, update_transforms_[i],
-                        frames_[i].size(), 1, cv::BORDER_CONSTANT);
-    stabilized_frames_.push_back(stabilized_frame);
-  }
-
-  logger::instance()->remove_dynamic_log("stabilize-frames");
-}
 }  // namespace vid
