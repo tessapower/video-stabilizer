@@ -27,7 +27,7 @@ namespace utils {
  * @param path A string to store the selected file path.
  * @return Whether the user successfully selected a file.
  */
-inline auto get_video_path(GLFWwindow* window, std::string& path) -> bool {
+inline auto get_video_path(GLFWwindow* window, std::filesystem::path& path) -> bool {
   nfdchar_t* out_path = nullptr;
   constexpr nfdu8filteritem_t filters[1] = {
       {"video", "mov,mp4,mpeg4,wmv,avi,flv"}};
@@ -38,7 +38,7 @@ inline auto get_video_path(GLFWwindow* window, std::string& path) -> bool {
 
   switch (NFD_OpenDialogU8_With(&out_path, &args)) {
     case NFD_OKAY: {
-      path = std::string{out_path};
+      path = out_path;
       NFD_FreePathU8(out_path);
 
       return true;
@@ -54,7 +54,7 @@ inline auto get_video_path(GLFWwindow* window, std::string& path) -> bool {
   return false;
 }
 
-inline auto get_save_directory(std::string& out_dir) -> bool {
+inline auto get_save_directory(std::filesystem::path& out_dir) -> bool {
   nfdchar_t* dir = nullptr;
 
   switch (NFD_PickFolderU8(&dir, nullptr)) {

@@ -1,14 +1,15 @@
 #ifndef VIDEO_H
 #define VIDEO_H
 
+#include <filesystem>
 #include <opencv2/core/mat.hpp>
 
 namespace vid {
 class video {
  public:
   video();
-  explicit video(std::string const& video_file_path);
   video& operator=(const video& other) noexcept;  // Copy-Assignment Operator
+  explicit video(std::filesystem::path const& video_file_path);
   ~video() = default;
 
   // Delete unused constructors and assignment operators
@@ -19,6 +20,8 @@ class video {
   auto load_video_from_file(std::string const& video_file_path) noexcept
       -> void;
 
+  auto load_video_from_file(
+      std::filesystem::path const& video_file_path) noexcept -> void;
 
   /**
    * @brief Exports the stabilized video to the given file path.
@@ -38,14 +41,14 @@ class video {
 
  private:
   std::vector<cv::Mat> original_frames_{};
+  std::string file_name_;
   double bitrate_ = 0;
   int fourcc_ = 0;
   int fps_ = 0;
   int frame_count_ = 0;
   cv::Size size_;
 
-  auto load_frames(std::vector<std::string> const& frames_file_paths) noexcept
-      -> void;
+  auto load_frames(std::vector<std::string> const& frames_file_paths) noexcept -> void;
 
   static auto padded_string(const int n, const int frame_count) noexcept
       -> std::string;

@@ -31,8 +31,10 @@ video& video::operator=(video const& other) noexcept {
   return *this;
 }
 
-video::video(std::string const& video_file_path) {
-  load_video_from_file(video_file_path);
+video::video(std::filesystem::path const& video_file_path) {
+  file_name_ = video_file_path.filename().string();
+
+  load_video_from_file(video_file_path.string());
 }
 
 auto video::load_frames(
@@ -70,17 +72,18 @@ auto video::padded_string(const int n, const int frame_count) noexcept
   return s;
 }
 
-auto video::load_video_from_file(std::string const& video_file_path) noexcept
-    -> void {
+auto video::load_video_from_file(
+    std::filesystem::path const& video_file_path) noexcept -> void {
   // Clear out old data
   if (!original_frames_.empty()) {
     original_frames_.clear();
     fps_ = 0;
+    file_name_ = "";
     fourcc_ = 0;
   }
 
   // Create a VideoCapture Object
-  auto video = cv::VideoCapture(video_file_path);
+  auto video_capture = cv::VideoCapture(video_file_path.string());
 
   if (!video.isOpened()) {
     std::cerr << "Error: Could not open video file\n";
@@ -96,7 +99,7 @@ auto video::load_video_from_file(std::string const& video_file_path) noexcept
                    static_cast<int>(video.get(cv::CAP_PROP_FRAME_HEIGHT)));
 
   // TODO: convert to debug log
-  std::cout << "Opened video file: " << video_file_path << "\n";
+  std::cout << "Opened video file: " << video_file_path.string() << "\n";
   std::cout << "FPS: " << fps_ << "\n";
   std::cout << "Frame Count: " << frame_count_ << "\n";
 

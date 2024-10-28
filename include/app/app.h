@@ -68,7 +68,7 @@ inline auto state_changed(const state old_state, const state new_state)
       if (mod.did_load()) {
         logger::instance()->add_log("Video loaded!\n");
         logger::instance()->add_log("File path: \"%s\"\n",
-                                    mod.video_path.c_str());
+                                    mod.video_path.string().c_str());
 
         logger::instance()->add_log("  - FPS: %i\n", mod.video->fps());
 
@@ -123,7 +123,7 @@ inline auto on_load_clicked() -> void {
           if (!m.video) {
             m.video = new vid::video(m.video_path);
           } else {
-            m.video->load_video_from_file(m.video_path);
+            m.video->load_video_from_file(m.video_path.string());
           }
 
           // If we failed to load a video, reset the pointer
@@ -163,7 +163,7 @@ inline auto on_save_clicked() -> void {
   if (utils::get_save_directory(mod.save_dir)) {
     worker = std::thread(
         [&](model &m) {
-          m.last_save_successful = m.video->export_to_file(m.save_dir);
+          m.last_save_successful = m.video->export_to_file(m.save_dir.string());
 
           m.transition_to_state(state::waiting);
         },

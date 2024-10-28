@@ -23,8 +23,8 @@ public:
   std::atomic<bool> last_save_successful = false;
   std::function<void(state, state)> state_change_cb;
   vid::video* video;
-  std::string video_path;
-  std::string save_dir;
+  std::filesystem::path video_path;
+  std::filesystem::path save_dir;
 
   model() : current_state(state::waiting), video(nullptr) {}
 
