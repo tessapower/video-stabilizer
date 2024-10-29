@@ -23,6 +23,7 @@ public:
   std::atomic<bool> last_save_successful = false;
   std::function<void(state, state)> state_change_cb;
   vid::video* video;
+  vid::video* stabilized_video;
   std::filesystem::path video_path;
   std::filesystem::path save_dir;
 

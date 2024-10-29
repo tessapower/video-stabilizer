@@ -149,7 +149,12 @@ inline auto on_stabilize_clicked() -> void {
 
   worker = std::thread(
       [](model &m) {
-        m.video_stabilized = m.video->stabilize();
+        if (!m.video) std::cerr << "Error: no video to stabilize\n";
+        else {
+          m.stabilized_video = new vid::video();
+          m.video_stabilized = stabilizer.stabilize(m.video, m.stabilized_video);
+          if (!m.video_stabilized) m.stabilized_video = nullptr;
+        }
 
         m.transition_to_state(state::waiting);
       },
