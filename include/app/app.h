@@ -112,8 +112,7 @@ inline auto state_changed(const state old_state, const state new_state)
 }
 
 inline auto on_load_clicked() -> void {
-  // Ensure the previous thread has finished before starting a
-  // new one
+  // Ensure the previous thread has finished before starting a new one
   if (worker.joinable()) worker.join();
   if (utils::get_video_path(window, mod.video_path)) {
     mod.transition_to_state(state::loading);

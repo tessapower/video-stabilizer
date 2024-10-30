@@ -129,11 +129,9 @@ void main() {
     glUseProgram(shader);
 
     //-------------------------------------------------- Register Model CB --//
-
     app::mod.set_state_change_cb(app::state_changed);
 
     //---------------------------------------------------------- Main Loop --//
-
     // Clear the background at least once before rendering the GUI
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
