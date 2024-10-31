@@ -27,6 +27,8 @@ static std::thread worker;
 
 static vid::stabilizer stabilizer;
 
+static bool auto_scroll = true;
+
 inline auto loading_char() -> std::string {
   return std::string{"|/-\\"[static_cast<int>(ImGui::GetTime() / 0.05f) & 3]};
 }

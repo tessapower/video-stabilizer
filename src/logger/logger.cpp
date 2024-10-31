@@ -12,7 +12,10 @@ auto logger::instance() -> logger* {
   return &instance;
 }
 
-auto logger::clear_log() -> void { buf_.clear(); }
+auto logger::clear_log() -> void {
+  buf_.clear();
+  clear_ = false;
+}
 
 auto logger::add_log(const char* fmt, ...) -> void IM_FMTARGS(2) {
   std::lock_guard lock(mutex_);
@@ -40,21 +43,6 @@ auto logger::remove_dynamic_log(const std::string& id) -> void {
 auto logger::draw() -> void IM_FMTARGS(2) {
   std::lock_guard lock(mutex_);
 
-  // Options menu
-  if (ImGui::BeginPopup("Options")) {
-    ImGui::Checkbox("Auto-scroll", &auto_scroll_);
-    ImGui::EndPopup();
-  }
-
-  // Buttons
-  if (ImGui::Button("Options")) ImGui::OpenPopup("Options");
-  ImGui::SameLine();
-
-  // Create a disabled button if the buffer is empty
-  ImGui::BeginDisabled(buf_.empty());
-  const bool clear = ImGui::Button("Clear");
-  ImGui::EndDisabled();
-
   ImGui::Separator();
 
   // Text area
@@ -65,7 +53,7 @@ auto logger::draw() -> void IM_FMTARGS(2) {
   if (ImGui::BeginChild("scrolling", ImVec2(0, -footer_height),
                         ImGuiChildFlags_None,
                         ImGuiWindowFlags_HorizontalScrollbar)) {
-    if (clear) clear_log();
+    if (clear_) clear_log();
 
     ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(4, 1));
 
@@ -87,3 +75,9 @@ auto logger::draw() -> void IM_FMTARGS(2) {
 
   ImGui::Separator();
 }
+
+auto logger::empty() const noexcept -> bool { return buf_.empty(); }
+
+auto logger::clear() noexcept -> void { clear_ = true; }
+
+auto logger::set_auto_scroll(const bool b) noexcept -> void { auto_scroll_ = b; }

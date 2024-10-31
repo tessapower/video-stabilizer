@@ -93,7 +93,27 @@ inline auto render() -> void {
           "This will display the help menu.\n"
           "This will display the help menu.\n");
     }
+
     ImGui::SameLine();
+    // Options menu
+    if (ImGui::BeginPopup("Options")) {
+      if (ImGui::Checkbox("Auto-scroll", &app::auto_scroll)) {
+        logger::instance()->set_auto_scroll(app::auto_scroll);
+      }
+      
+      ImGui::EndPopup();
+    }
+
+    // Buttons
+    if (ImGui::Button("Options")) ImGui::OpenPopup("Options");
+    ImGui::SameLine();
+
+    // Create a disabled button if the buffer is empty
+    ImGui::BeginDisabled(logger::instance()->empty());
+    if (ImGui::Button("Clear")) { logger::instance()->clear(); }
+    ImGui::EndDisabled();
+
+
     logger::instance()->draw();
     ImGui::Spacing();
 
