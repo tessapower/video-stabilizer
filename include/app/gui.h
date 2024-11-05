@@ -75,8 +75,11 @@ inline auto render() -> void {
 
     ImGui::Spacing();
 
-    //------------------------------------------------------ Logger window --//
+    //---------------------------------------------------------- File Info --//
 
+    ImGui::Spacing();
+
+    //------------------------------------------------- Log Action Buttons --//
     if (ImGui::Button("Help")) {
       // ImGui::OpenPopup("help_popup");
       // TODO: decide whether we like the help popup or help log better
@@ -100,7 +103,7 @@ inline auto render() -> void {
       if (ImGui::Checkbox("Auto-scroll", &app::auto_scroll)) {
         logger::instance()->set_auto_scroll(app::auto_scroll);
       }
-      
+
       ImGui::EndPopup();
     }
 
@@ -110,10 +113,12 @@ inline auto render() -> void {
 
     // Create a disabled button if the buffer is empty
     ImGui::BeginDisabled(logger::instance()->empty());
-    if (ImGui::Button("Clear")) { logger::instance()->clear(); }
+    if (ImGui::Button("Clear")) {
+      logger::instance()->clear();
+    }
     ImGui::EndDisabled();
 
-
+    //------------------------------------------------------ Logger window --//
     logger::instance()->draw();
     ImGui::Spacing();
 
